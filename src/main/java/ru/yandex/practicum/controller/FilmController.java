@@ -2,13 +2,16 @@ package ru.yandex.practicum.controller;
 
 import lombok.NonNull;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.exception.ValidationException;
 import ru.yandex.practicum.model.Film;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.yandex.practicum.model.User;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
@@ -20,10 +23,10 @@ public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @GetMapping
-    public Map<String, Film> findAll() {
+    public Collection<Film> findAll() {
         log.info("Получен запрос Get /Film.");
         log.debug("Текущее количество фильмов: {}", films.size());
-        return films;
+        return films.values();
     }
 
     @PostMapping
@@ -32,7 +35,9 @@ public class FilmController {
         if(validateFilm(film))
         {
             log.trace("Фильм прошел валидацию");
-
+            if(films.containsKey(film.getName()))
+                throw new ObjectAlreadyExistException("Фильм с названием " + film.getName() + " уже существует.");
+            films.put(film.getName(), film);
         } else
         {
             throw new ValidationException();
@@ -46,7 +51,8 @@ public class FilmController {
         if(validateFilm(film))
         {
             log.trace("Фильм прошел валидацию");
-
+            //Не выводим ошибку о наличии фильма из-за метода put
+            films.put(film.getName(), film);
         } else
         {
             throw new ValidationException();

@@ -4,14 +4,12 @@ import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.exception.ValidationException;
 import ru.yandex.practicum.model.User;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/Users")
@@ -20,11 +18,11 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping
-    public ArrayList<User> findAll() {
+    public Collection<User> findAll() {
         log.info("Получен запрос Get /Users.");
         log.debug("Текущее количество пользователей: {}", users.size());
 
-        return null;
+        return users.values();
     }
 
     @PostMapping
@@ -34,8 +32,11 @@ public class UserController {
         {
             log.trace("Пользователь прошел валидацию");
             //Думал перенести это в validateUser, но по логическим соображениям не стал
+            if(users.containsKey(user.getEmail()))
+                throw new ObjectAlreadyExistException("Пользователь с почтой " + user.getEmail() + " уже существует");
             if(user.getName().isBlank())
                 user.setName(user.getLogin());
+            users.put(user.getEmail(), user);
         } else
         {
             throw new ValidationException();
@@ -52,6 +53,8 @@ public class UserController {
             log.trace("Пользователь прошел валидацию");
             if(user.getName().isBlank())
                 user.setName(user.getLogin());
+            //Не выводим ошибку о наличии пользователя из-за метода put
+            users.put(user.getEmail(), user);
         } else
         {
             throw new ValidationException();
