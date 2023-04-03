@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controllerTest;
 
+import org.assertj.core.internal.Maps;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,9 @@ import ru.yandex.practicum.model.Film;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,7 +33,61 @@ class FilmControllerTest {
                 "qwerty",
                 LocalDate.of(1999, 10, 10),
                 Duration.ofHours(2));
+        assertEquals(film, filmController.create(film));
+    }
+
+    @Test
+    void shouldPutFilmsOK() {
+        Film film = new Film(1,
+                "qwerty",
+                LocalDate.of(1999, 10, 10),
+                Duration.ofHours(2));
         assertEquals(film, filmController.put(film));
+    }
+
+    @Test
+    void shouldPutAndCreateSameFilmOK(){
+        Film film = new Film(1,
+                "qwerty",
+                LocalDate.of(1999, 10, 10),
+                Duration.ofHours(2));
+        assertEquals(film, filmController.create(film));
+        assertEquals(film, filmController.put(film));
+    }
+
+    @Test
+    void shouldGetAllFilmsOK(){
+        Film film1 = new Film(1,
+                "qwerty1",
+                LocalDate.of(1999, 10, 10),
+                Duration.ofHours(2));
+        Film film2 = new Film(1,
+                "qwerty2",
+                LocalDate.of(2000, 11, 11),
+                Duration.ofHours(3));
+        assertEquals(film1, filmController.create(film1));
+        assertEquals(film2, filmController.create(film2));
+
+        Map<String, Film> films = new HashMap<>();
+        films.put(film1.getName(), film1);
+        films.put(film2.getName(), film2);
+
+        //Не понимает одинаковость двух мап
+        assertEquals((Collection<Film>) films.values(),(Collection<Film>) filmController.findAll());
+    }
+
+    @Test
+    void shouldPutFilmOKWithChanges(){
+        Film film1 = new Film(1,
+                "qwerty1",
+                LocalDate.of(1999, 10, 10),
+                Duration.ofHours(2));
+        Film film2 = new Film(1,
+                "qwerty2",
+                LocalDate.of(2000, 11, 11),
+                Duration.ofHours(3));
+        assertEquals(film1, filmController.create(film1));
+        assertEquals(film2, filmController.put(film2));
     }
 
     @Test
@@ -77,7 +135,7 @@ class FilmControllerTest {
     void shouldThrowValidationExceptionBecauseOfDescription() throws ValidationException{
         Film film = new Film(1,
                 "qwerty",
-                LocalDate.of(199, 10, 10),
+                LocalDate.of(1999, 10, 10),
                 Duration.ofHours(2));
         //Очень длинное описание...
         film.setDescription("— Лишь Машинное Правоверие несёт совершенство. Лишь оно несёт благодать.\n\n" +
