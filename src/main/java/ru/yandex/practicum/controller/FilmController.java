@@ -2,6 +2,7 @@ package ru.yandex.practicum.controller;
 
 import lombok.NonNull;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.exception.ValidationException;
 import ru.yandex.practicum.model.Film;
 
 import org.slf4j.Logger;
@@ -20,33 +21,35 @@ public class FilmController {
 
     @GetMapping
     public Map<String, Film> findAll() {
-        log.debug("Получен запрос Get /Film.");
+        log.info("Получен запрос Get /Film.");
         log.debug("Текущее количество фильмов: {}", films.size());
         return films;
     }
 
     @PostMapping
     public Film create(@RequestBody @NonNull Film film) {
-        log.debug("Получен запрос Post /Film.");
+        log.info("Получен запрос Post /Film.");
         if(validateFilm(film))
         {
+            log.trace("Фильм прошел валидацию");
 
         } else
         {
-            throw new InputMismatchException();
+            throw new ValidationException();
         }
         return film;
     }
 
     @PutMapping
     public Film put(@RequestBody @NonNull Film film) {
-        log.debug("Получен запрос Put /Film.");
+        log.info("Получен запрос Put /Film.");
         if(validateFilm(film))
         {
+            log.trace("Фильм прошел валидацию");
 
         } else
         {
-            throw new InputMismatchException();
+            throw new ValidationException();
         }
         return film;
     }

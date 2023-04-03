@@ -1,4 +1,13 @@
 package ru.yandex.practicum.exception;
 
-public class ValidationException {
+import java.util.InputMismatchException;
+
+public class ValidationException extends InputMismatchException {
+    public ValidationException() {
+        super();
+    }
+
+    public ValidationException(String s) {
+        super(s);
+    }
 }
