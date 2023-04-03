@@ -31,11 +31,8 @@ public class UserController {
         if(validateUser(user))
         {
             log.trace("Пользователь прошел валидацию");
-            //Думал перенести это в validateUser, но по логическим соображениям не стал
             if(users.containsKey(user.getEmail()))
                 throw new ObjectAlreadyExistException("Пользователь с почтой " + user.getEmail() + " уже существует");
-            if(user.getName().isBlank())
-                user.setName(user.getLogin());
             users.put(user.getEmail(), user);
         } else
         {
@@ -51,8 +48,6 @@ public class UserController {
         if(validateUser(user))
         {
             log.trace("Пользователь прошел валидацию");
-            if(user.getName().isBlank())
-                user.setName(user.getLogin());
             //Не выводим ошибку о наличии пользователя из-за метода put
             users.put(user.getEmail(), user);
         } else
@@ -65,6 +60,10 @@ public class UserController {
 
     private boolean validateUser(User user)
     {
+        //Проверка nonNull аргумента
+        if(user.getName().isBlank())
+            user.setName(user.getLogin());
+
         //isBlank, чтобы отсеять пробелы
         if(user.getEmail().isBlank() || !user.getEmail().contains("@"))
             return false;

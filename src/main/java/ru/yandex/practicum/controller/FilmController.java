@@ -62,6 +62,12 @@ public class FilmController {
 
     private boolean validateFilm(Film film)
     {
+        //Проверка nonNull аргумента
+        if(film.getDescription() == null)
+            film.setDescription("");
+
+        if(film.getName().isBlank())
+            return false;
         if(film.getDescription().length() > 200)
             return false;
         //День рождение кино
