@@ -11,11 +11,13 @@ import ru.yandex.practicum.model.Film;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class FilmControllerTest {
@@ -72,8 +74,46 @@ class FilmControllerTest {
         films.put(film1.getName(), film1);
         films.put(film2.getName(), film2);
 
-        //Не понимает одинаковость двух мап
-        assertEquals((Collection<Film>) films.values(),(Collection<Film>) filmController.findAll());
+        //Надо проверять все фильмы, т.к. сравнение assertEquals не работает с мапами
+        Collection<Film> result = filmController.findAll();
+        for(Film currentFilm: result)
+        {
+            String currentName = currentFilm.getName();
+            assertTrue(films.containsKey(currentName));
+            assertEquals(films.get(currentName), currentFilm);
+        }
+    }
+
+    @Test
+    void shouldGetAllFilmsAfterChangesOK(){
+        Film film1 = new Film(1,
+                "qwerty1",
+                LocalDate.of(1999, 10, 10),
+                Duration.ofHours(2));
+        Film film2 = new Film(1,
+                "qwerty2",
+                LocalDate.of(2000, 11, 11),
+                Duration.ofHours(3));
+        Film newFilm1 = new Film(1,
+                "qwerty1",
+                LocalDate.of(2020, 5, 5),
+                Duration.ofHours(2));
+        assertEquals(film1, filmController.create(film1));
+        assertEquals(film2, filmController.create(film2));
+        assertEquals(newFilm1, filmController.put(newFilm1));
+
+        Map<String, Film> films = new HashMap<>();
+        films.put(film1.getName(), newFilm1);
+        films.put(film2.getName(), film2);
+
+        //Надо проверять все фильмы, т.к. сравнение assertEquals не работает с мапами
+        Collection<Film> result = filmController.findAll();
+        for(Film currentFilm: result)
+        {
+            String currentName = currentFilm.getName();
+            assertTrue(films.containsKey(currentName));
+            assertEquals(films.get(currentName), currentFilm);
+        }
     }
 
     @Test
