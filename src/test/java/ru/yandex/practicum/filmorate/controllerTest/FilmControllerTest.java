@@ -22,8 +22,7 @@ class FilmControllerTest {
     static FilmController filmController;
 
     @BeforeEach
-    void beforeEach()
-    {
+    void beforeEach() {
         filmController = new FilmController();
     }
 
@@ -37,7 +36,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldPutAndCreateSameFilmOK(){
+    void shouldPutAndCreateSameFilmOK() {
         Film film = new Film("qwerty",
                 "Description",
                 LocalDate.of(1999, 10, 10),
@@ -47,7 +46,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldGetAllFilmsOK(){
+    void shouldGetAllFilmsOK() {
         Film film1 = new Film("qwerty1",
                 "Description",
                 LocalDate.of(1999, 10, 10),
@@ -67,7 +66,7 @@ class FilmControllerTest {
 
         //Надо проверять все фильмы, т.к. сравнение assertEquals не работает с мапами
         Collection<Film> result = filmController.findAll();
-        for(Film currentFilm: result) {
+        for (Film currentFilm: result) {
             Integer currentId = currentFilm.getId();
             assertTrue(films.containsKey(currentId));
             assertEquals(films.get(currentId), currentFilm);
@@ -75,7 +74,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldGetAllFilmsAfterChangesOK(){
+    void shouldGetAllFilmsAfterChangesOK() {
         Film film1 = new Film("qwerty1",
                 "Description",
                 LocalDate.of(1999, 10, 10),
@@ -104,7 +103,7 @@ class FilmControllerTest {
 
         //Надо проверять все фильмы, т.к. сравнение assertEquals не работает с мапами
         Collection<Film> result = filmController.findAll();
-        for(Film currentFilm: result) {
+        for (Film currentFilm: result) {
             Integer currentId = currentFilm.getId();
             assertTrue(films.containsKey(currentId));
             assertEquals(films.get(currentId), currentFilm);
@@ -112,7 +111,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldPutFilmOKWithChanges(){
+    void shouldPutFilmOKWithChanges() {
         Film film1 = new Film("qwerty",
                 "Description1",
                 LocalDate.of(1999, 10, 10),
@@ -139,7 +138,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowNullPointerExceptionBecauseOfNull() throws NullPointerException{
+    void shouldThrowNullPointerExceptionBecauseOfNull() throws NullPointerException {
         Film film = null;
         Assertions.assertThrows(NullPointerException.class, () -> {
             filmController.create(film);
@@ -147,7 +146,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowObjectAlreadyExistExceptionBecauseOfId() throws ObjectAlreadyExistException{
+    void shouldThrowObjectAlreadyExistExceptionBecauseOfId() throws ObjectAlreadyExistException {
         Film film1 = new Film("qwerty1",
                 "Description1",
                 LocalDate.of(1999, 10, 10),
@@ -167,7 +166,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowValidationExceptionBecauseOfName() throws ValidationException{
+    void shouldThrowValidationExceptionBecauseOfName() throws ValidationException {
         Film film = new Film("     ",
                 "Description",
                 LocalDate.of(1999, 10, 10),
@@ -178,7 +177,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowValidationExceptionBecauseOfDateInPast() throws ValidationException{
+    void shouldThrowValidationExceptionBecauseOfDateInPast() throws ValidationException {
         Film film = new Film("qwerty",
                 "Description",
                 LocalDate.of(199, 10, 10),
@@ -189,7 +188,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowValidationExceptionBecauseOfDateInFuture() throws ValidationException{
+    void shouldThrowValidationExceptionBecauseOfDateInFuture() throws ValidationException {
         Film film = new Film("qwerty",
                 "Description",
                 LocalDate.of(19999, 10, 10),
@@ -200,15 +199,15 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowValidationExceptionBecauseOfDescription() throws ValidationException{
+    void shouldThrowValidationExceptionBecauseOfDescription() throws ValidationException {
         //Очень длинное описание...
         Film film = new Film("qwerty",
                 "— Лишь Машинное Правоверие несёт совершенство. Лишь оно несёт благодать.\n\n" +
                         "Произнеся это своим синтезированным голосом, который эхом разнёсся по внутреннему двору " +
-                        "Чистой базилики, Элеш Норн, Фирексийский регент и Матерь Машин, ощутила свет этой истины глубоко " +
-                        "внутри своего священного механического тела. Машинное Правоверие было единственным путём к " +
-                        "окончательному объединению, путём столь же чистым, непогрешимым и несомненным, как и само её " +
-                        "блестящее масло.\n\n" +
+                        "Чистой базилики, Элеш Норн, Фирексийский регент и Матерь Машин, ощутила свет этой истины " +
+                        "глубоко внутри своего священного механического тела. Машинное Правоверие было " +
+                        "единственным путём к окончательному объединению, путём столь же чистым, непогрешимым и " +
+                        "несомненным, как и само её блестящее масло.\n\n" +
                         "Норн никогда ещё не была так в этом уверена, как сейчас, когда она, сверкая доспехами в " +
                         "молочно-белом свете, обвела взглядом собравшихся фирексийцев со своего амвона. То были " +
                         "символы достигнутого ею могущества: Чистая базилика, её башни, её металлические шпили, " +
@@ -223,7 +222,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowValidationExceptionBecauseOfDuration() throws ValidationException{
+    void shouldThrowValidationExceptionBecauseOfDuration() throws ValidationException {
         Film film = new Film("qwerty",
                 "Description",
                 LocalDate.of(1999, 10, 10),

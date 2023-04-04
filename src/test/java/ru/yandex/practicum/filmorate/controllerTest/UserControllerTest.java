@@ -22,8 +22,7 @@ class UserControllerTest {
     static UserController userController;
 
     @BeforeEach
-    void beforeEach()
-    {
+    void beforeEach() {
         userController = new UserController();
     }
 
@@ -98,8 +97,7 @@ class UserControllerTest {
 
         //Надо проверять всех пользователей, т.к. сравнение assertEquals не работает с мапами
         Collection<User> result = userController.findAll();
-        for(User currentUser: result)
-        {
+        for (User currentUser: result) {
             Integer currentId = currentUser.getId();
             assertTrue(users.containsKey(currentId));
             assertEquals(users.get(currentId), currentUser);
@@ -133,8 +131,7 @@ class UserControllerTest {
 
         //Надо проверять всех пользователей, т.к. сравнение assertEquals не работает с мапами
         Collection<User> result = userController.findAll();
-        for(User currentUser: result)
-        {
+        for (User currentUser: result) {
             Integer currentId = currentUser.getId();
             assertTrue(users.containsKey(currentId));
             assertEquals(users.get(currentId), currentUser);
@@ -152,7 +149,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldThrowNullPointerExceptionBecauseOfNull() throws NullPointerException{
+    void shouldThrowNullPointerExceptionBecauseOfNull() throws NullPointerException {
         User user = null;
         Assertions.assertThrows(NullPointerException.class, () -> {
             userController.create(user);
