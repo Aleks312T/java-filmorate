@@ -1,11 +1,11 @@
-package ru.yandex.practicum.controller;
+package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.exception.ObjectAlreadyExistException;
-import ru.yandex.practicum.exception.ValidationException;
-import ru.yandex.practicum.model.Film;
+import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -46,6 +46,13 @@ public class FilmController {
     @PutMapping
     public Film put(@RequestBody Film film) {
         log.info("Получен запрос Put /films.");
+        if(!films.containsKey(film.getName()))
+        {
+            String errorMessage = "Пришел неизвестный фильм на обновление";
+            log.warn(errorMessage);
+            //Не уверен в том, какое исключение нужно выдавать
+            throw new RuntimeException();
+        }
         if(validateFilm(film))
         {
             log.trace("Фильм прошел валидацию");

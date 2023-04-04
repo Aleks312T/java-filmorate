@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.controller.FilmController;
-import ru.yandex.practicum.exception.ObjectAlreadyExistException;
-import ru.yandex.practicum.exception.ValidationException;
-import ru.yandex.practicum.model.Film;
+import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,15 +35,6 @@ class FilmControllerTest {
                 LocalDate.of(1999, 10, 10),
                 120);
         assertEquals(film, filmController.create(film));
-    }
-
-    @Test
-    void shouldPutFilmsOK() {
-        Film film = new Film("qwerty",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        assertEquals(film, filmController.put(film));
     }
 
     @Test
@@ -117,16 +108,27 @@ class FilmControllerTest {
 
     @Test
     void shouldPutFilmOKWithChanges(){
-        Film film1 = new Film("qwerty1",
-                "Description",
+        Film film1 = new Film("qwerty",
+                "Description1",
                 LocalDate.of(1999, 10, 10),
                 120);
-        Film film2 = new Film("qwerty2",
-                "Description",
+        Film film2 = new Film("qwerty",
+                "Description2",
                 LocalDate.of(2000, 11, 11),
                 180);
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.put(film2));
+    }
+
+    @Test
+    void shouldNotPutUnknownFilm() {
+        Film film = new Film("qwerty",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            filmController.put(film);
+        });
     }
 
     @Test

@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.controller.UserController;
-import ru.yandex.practicum.exception.ObjectAlreadyExistException;
-import ru.yandex.practicum.exception.ValidationException;
-import ru.yandex.practicum.model.User;
+import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -33,14 +33,6 @@ class UserControllerTest {
                 "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         assertEquals(user, userController.create(user));
-    }
-
-    @Test
-    void shouldPutUserOK() {
-        User user = new User("login",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        assertEquals(user, userController.put(user));
     }
 
     @Test
@@ -129,6 +121,16 @@ class UserControllerTest {
             assertTrue(users.containsKey(currentEmail));
             assertEquals(users.get(currentEmail), currentUser);
         }
+    }
+
+    @Test
+    void shouldNotPutUnknownUser() {
+        User user = new User("login",
+                "qwerty@mail.ru",
+                LocalDate.of(1999, 10, 10));
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            userController.put(user);
+        });
     }
 
     @Test

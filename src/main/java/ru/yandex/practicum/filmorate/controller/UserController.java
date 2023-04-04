@@ -1,11 +1,11 @@
-package ru.yandex.practicum.controller;
+package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.exception.ObjectAlreadyExistException;
-import ru.yandex.practicum.exception.ValidationException;
-import ru.yandex.practicum.model.User;
+import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -48,6 +48,13 @@ public class UserController {
     @PutMapping
     public User put(@RequestBody User user) {
         log.info("Получен запрос Put /users.");
+        if(!users.containsKey(user.getEmail()))
+        {
+            String errorMessage = "Пришел неизвестный фильм на обновление";
+            log.warn(errorMessage);
+            //Не уверен в том, какое исключение нужно выдавать
+            throw new RuntimeException();
+        }
         if(validateUser(user))
         {
             log.trace("Пользователь прошел валидацию");
@@ -76,9 +83,7 @@ public class UserController {
             return false;
         if(user.getLogin().isEmpty() || user.getLogin().contains(" "))
             return false;
-        if(user.getBirthday() != null)
-            return !user.getBirthday().isAfter(LocalDate.now());
+        return !user.getBirthday().isAfter(LocalDate.now());
 
-        return true;
     }
 }
