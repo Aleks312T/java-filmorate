@@ -36,6 +36,8 @@ public class UserController {
             users.put(user.getEmail(), user);
         } else
         {
+            String errorMessage = "Пользователь не прошел валидацию";
+            log.warn(errorMessage);
             throw new ValidationException();
         }
 
@@ -52,6 +54,8 @@ public class UserController {
             users.put(user.getEmail(), user);
         } else
         {
+            String errorMessage = "Пользователь не прошел валидацию";
+            log.warn(errorMessage);
             throw new ValidationException();
         }
 

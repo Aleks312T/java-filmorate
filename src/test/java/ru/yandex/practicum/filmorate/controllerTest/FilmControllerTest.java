@@ -33,7 +33,7 @@ class FilmControllerTest {
         Film film = new Film(1,
                 "qwerty",
                 LocalDate.of(1999, 10, 10),
-                Duration.ofHours(2));
+                120);
         assertEquals(film, filmController.create(film));
     }
 
@@ -42,7 +42,7 @@ class FilmControllerTest {
         Film film = new Film(1,
                 "qwerty",
                 LocalDate.of(1999, 10, 10),
-                Duration.ofHours(2));
+                120);
         assertEquals(film, filmController.put(film));
     }
 
@@ -51,7 +51,7 @@ class FilmControllerTest {
         Film film = new Film(1,
                 "qwerty",
                 LocalDate.of(1999, 10, 10),
-                Duration.ofHours(2));
+                120);
         assertEquals(film, filmController.create(film));
         assertEquals(film, filmController.put(film));
     }
@@ -61,11 +61,11 @@ class FilmControllerTest {
         Film film1 = new Film(1,
                 "qwerty1",
                 LocalDate.of(1999, 10, 10),
-                Duration.ofHours(2));
+                120);
         Film film2 = new Film(1,
                 "qwerty2",
                 LocalDate.of(2000, 11, 11),
-                Duration.ofHours(3));
+                180);
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.create(film2));
 
@@ -88,15 +88,15 @@ class FilmControllerTest {
         Film film1 = new Film(1,
                 "qwerty1",
                 LocalDate.of(1999, 10, 10),
-                Duration.ofHours(2));
+                120);
         Film film2 = new Film(1,
                 "qwerty2",
                 LocalDate.of(2000, 11, 11),
-                Duration.ofHours(3));
+                180);
         Film newFilm1 = new Film(1,
                 "qwerty1",
                 LocalDate.of(2020, 5, 5),
-                Duration.ofHours(2));
+                120);
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.create(film2));
         assertEquals(newFilm1, filmController.put(newFilm1));
@@ -120,11 +120,11 @@ class FilmControllerTest {
         Film film1 = new Film(1,
                 "qwerty1",
                 LocalDate.of(1999, 10, 10),
-                Duration.ofHours(2));
+                120);
         Film film2 = new Film(1,
                 "qwerty2",
                 LocalDate.of(2000, 11, 11),
-                Duration.ofHours(3));
+                180);
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.put(film2));
     }
@@ -142,11 +142,11 @@ class FilmControllerTest {
         Film film1 = new Film(1,
                 "qwerty",
                 LocalDate.of(1999, 10, 10),
-                Duration.ofHours(2));
+                120);
         Film film2 = new Film(1,
                 "qwerty",
                 LocalDate.of(2000, 11, 11),
-                Duration.ofHours(3));
+                180);
         filmController.create(film1);
         Assertions.assertThrows(ObjectAlreadyExistException.class, () -> {
             filmController.create(film2);
@@ -158,7 +158,7 @@ class FilmControllerTest {
         Film film = new Film(1,
                 "     ",
                 LocalDate.of(1999, 10, 10),
-                Duration.ofHours(2));
+                120);
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });
@@ -167,9 +167,9 @@ class FilmControllerTest {
     @Test
     void shouldThrowValidationExceptionBecauseOfDateInPast() throws ValidationException{
         Film film = new Film(1,
-                "     ",
+                "qwerty",
                 LocalDate.of(199, 10, 10),
-                Duration.ofHours(2));
+                120);
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });
@@ -178,9 +178,9 @@ class FilmControllerTest {
     @Test
     void shouldThrowValidationExceptionBecauseOfDateInFuture() throws ValidationException{
         Film film = new Film(1,
-                "     ",
+                "qwerty",
                 LocalDate.of(19999, 10, 10),
-                Duration.ofHours(2));
+                120);
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });
@@ -191,7 +191,7 @@ class FilmControllerTest {
         Film film = new Film(1,
                 "qwerty",
                 LocalDate.of(1999, 10, 10),
-                Duration.ofHours(2));
+                120);
         //Очень длинное описание...
         film.setDescription("— Лишь Машинное Правоверие несёт совершенство. Лишь оно несёт благодать.\n\n" +
                 "Произнеся это своим синтезированным голосом, который эхом разнёсся по внутреннему двору " +
@@ -205,6 +205,17 @@ class FilmControllerTest {
                 "подобные фарфору, величественные соборы, устремлённые ввысь, извитые, тонкие и воздушные. " +
                 "На мостиках и зубцах реяли багровые знамёна, резко выделяясь на фоне сверкающих построек " +
                 "и каменных плит, выстилающих двор.\n\n");
+        Assertions.assertThrows(ValidationException.class, () -> {
+            filmController.create(film);
+        });
+    }
+
+    @Test
+    void shouldThrowValidationExceptionBecauseOfDuration() throws ValidationException{
+        Film film = new Film(1,
+                "qwerty",
+                LocalDate.of(1999, 10, 10),
+                -120);
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });

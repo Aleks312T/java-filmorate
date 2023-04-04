@@ -40,6 +40,8 @@ public class FilmController {
             films.put(film.getName(), film);
         } else
         {
+            String errorMessage = "Фильм не прошел валидацию";
+            log.warn(errorMessage);
             throw new ValidationException();
         }
         return film;
@@ -55,6 +57,8 @@ public class FilmController {
             films.put(film.getName(), film);
         } else
         {
+            String errorMessage = "Фильм не прошел валидацию";
+            log.warn(errorMessage);
             throw new ValidationException();
         }
         return film;
@@ -75,7 +79,7 @@ public class FilmController {
             return false;
         if(film.getReleaseDate().isAfter(LocalDate.now()))
             return false;
-        if(film.getDuration().isZero())
+        if(film.getDuration() <= 0)
             return false;
 
         return true;
