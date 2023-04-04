@@ -35,7 +35,7 @@ public class UserController {
         } else
         if (validateUser(user)) {
             log.trace("Пользователь {} прошел валидацию", user.getId());
-            if(user.getId() == 0)
+            if (user.getId() == 0)
                 user.setId(users.size() + 1);
             users.put(user.getId(), user);
         } else {
@@ -57,7 +57,7 @@ public class UserController {
         } else
         if (validateUser(user)) {
             log.trace("Пользователь {} прошел валидацию", user.getId());
-            if(user.getId() == 0)
+            if (user.getId() == 0)
                 user.setId(users.size());
             //Не выводим ошибку о наличии пользователя из-за метода put
             users.put(user.getId(), user);
@@ -69,8 +69,7 @@ public class UserController {
         return user;
     }
 
-    private boolean validateUser(User user)
-    {
+    private boolean validateUser(User user) {
         //Проверка nonNull аргумента
         if (user.getName() == null)
             user.setName(user.getLogin());
