@@ -1,17 +1,16 @@
 package ru.yandex.practicum.filmorate.controllerTest;
 
-import org.assertj.core.internal.Maps;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.controller.FilmController;
+import ru.yandex.practicum.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.exception.ValidationException;
 import ru.yandex.practicum.model.Film;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -131,10 +130,26 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowNullPointerExceptionBecauseOfNull1() throws NullPointerException{
+    void shouldThrowNullPointerExceptionBecauseOfNull() throws NullPointerException{
         Film film = null;
         Assertions.assertThrows(NullPointerException.class, () -> {
-            filmController.put(film);
+            filmController.create(film);
+        });
+    }
+
+    @Test
+    void shouldThrowObjectAlreadyExistExceptionBecauseOfName() throws ObjectAlreadyExistException{
+        Film film1 = new Film(1,
+                "qwerty",
+                LocalDate.of(1999, 10, 10),
+                Duration.ofHours(2));
+        Film film2 = new Film(1,
+                "qwerty",
+                LocalDate.of(2000, 11, 11),
+                Duration.ofHours(3));
+        filmController.create(film1);
+        Assertions.assertThrows(ObjectAlreadyExistException.class, () -> {
+            filmController.create(film2);
         });
     }
 
@@ -145,7 +160,7 @@ class FilmControllerTest {
                 LocalDate.of(1999, 10, 10),
                 Duration.ofHours(2));
         Assertions.assertThrows(ValidationException.class, () -> {
-            filmController.put(film);
+            filmController.create(film);
         });
     }
 
@@ -156,7 +171,7 @@ class FilmControllerTest {
                 LocalDate.of(199, 10, 10),
                 Duration.ofHours(2));
         Assertions.assertThrows(ValidationException.class, () -> {
-            filmController.put(film);
+            filmController.create(film);
         });
     }
 
@@ -167,7 +182,7 @@ class FilmControllerTest {
                 LocalDate.of(19999, 10, 10),
                 Duration.ofHours(2));
         Assertions.assertThrows(ValidationException.class, () -> {
-            filmController.put(film);
+            filmController.create(film);
         });
     }
 
@@ -191,7 +206,7 @@ class FilmControllerTest {
                 "На мостиках и зубцах реяли багровые знамёна, резко выделяясь на фоне сверкающих построек " +
                 "и каменных плит, выстилающих двор.\n\n");
         Assertions.assertThrows(ValidationException.class, () -> {
-            filmController.put(film);
+            filmController.create(film);
         });
     }
 }

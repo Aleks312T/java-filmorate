@@ -5,11 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.controller.UserController;
+import ru.yandex.practicum.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.exception.ValidationException;
-import ru.yandex.practicum.model.Film;
 import ru.yandex.practicum.model.User;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,6 +43,17 @@ class UserControllerTest {
                 "login",
                 "name");
         assertEquals(user, userController.put(user));
+    }
+
+    @Test
+    void shouldUseLoginForEmptyNameOK() {
+        User user = new User(1,
+                "qwerty@mail.ru",
+                "login",
+                "");
+        User result = userController.create(user);
+        assertEquals(user, result);
+        assertEquals("login", result.getName());
     }
 
     @Test
@@ -131,5 +141,87 @@ class UserControllerTest {
             assertTrue(users.containsKey(currentName));
             assertEquals(users.get(currentName), currentUser);
         }
+    }
+
+    @Test
+    void shouldThrowNullPointerExceptionBecauseOfNull() throws NullPointerException{
+        User user = null;
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            userController.create(user);
+        });
+    }
+
+    @Test
+    void shouldThrowObjectAlreadyExistExceptionBecauseOfName() throws ObjectAlreadyExistException {
+        User user1 = new User(1,
+                "qwerty@mail.ru",
+                "login1",
+                "name1");
+        User user2 = new User(1,
+                "qwerty@mail.ru",
+                "login2",
+                "name2");
+        userController.create(user1);
+        Assertions.assertThrows(ObjectAlreadyExistException.class, () -> {
+            userController.create(user2);
+        });
+    }
+
+    @Test
+    void shouldThrowValidationExceptionBecauseOfBadEmail1() throws ValidationException {
+        User user = new User(1,
+                "qwertymail.ru",
+                "login",
+                "name");
+        Assertions.assertThrows(ValidationException.class, () -> {
+            userController.create(user);
+        });
+    }
+
+    @Test
+    void shouldThrowValidationExceptionBecauseOfEmptyEmail() throws ValidationException {
+        User user = new User(1,
+                "             ",
+                "login",
+                "name");
+        Assertions.assertThrows(ValidationException.class, () -> {
+            userController.create(user);
+        });
+    }
+
+    @Test
+    void shouldThrowValidationExceptionBecauseOfBirthday() throws ValidationException {
+        User user = new User(1,
+                "qwerty@mail.ru",
+                "login",
+                "name");
+        user.setBirthday(LocalDate.of(19999, 11, 11));
+        Assertions.assertThrows(ValidationException.class, () -> {
+            userController.create(user);
+        });
+    }
+
+    @Test
+    void shouldThrowValidationExceptionBecauseOfSpacesInLogin() throws ValidationException {
+        User user = new User(1,
+                "qwerty@mail.ru",
+                " l o g i n ",
+                "name");
+        user.setBirthday(LocalDate.of(19999, 11, 11));
+        Assertions.assertThrows(ValidationException.class, () -> {
+            userController.create(user);
+        });
+    }
+
+    @Test
+    void shouldThrowValidationExceptionBecauseOfEmptyLogin() throws ValidationException {
+        User user = new User(1,
+                "qwerty@mail.ru",
+                "",
+                "name");
+        user.setBirthday(LocalDate.of(19999, 11, 11));
+        Assertions.assertThrows(ValidationException.class, () -> {
+            userController.create(user);
+        });
     }
 }
