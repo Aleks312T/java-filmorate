@@ -31,7 +31,7 @@ class UserControllerTest {
     void shouldPostUserOK() {
         User user = new User("qwerty@mail.ru",
                 "login",
-                "name");
+                LocalDate.of(1999, 10, 10));
         assertEquals(user, userController.create(user));
     }
 
@@ -39,7 +39,7 @@ class UserControllerTest {
     void shouldPutUserOK() {
         User user = new User("qwerty@mail.ru",
                 "login",
-                "name");
+                LocalDate.of(1999, 10, 10));
         assertEquals(user, userController.put(user));
     }
 
@@ -47,7 +47,7 @@ class UserControllerTest {
     void shouldUseLoginForEmptyNameOK() {
         User user = new User("qwerty@mail.ru",
                 "login",
-                "");
+                LocalDate.of(1999, 10, 10));
         User result = userController.create(user);
         assertEquals(user, result);
         assertEquals("login", result.getName());
@@ -57,10 +57,10 @@ class UserControllerTest {
     void shouldPutSameUserAgainOK() {
         User user1 = new User("qwerty@mail.ru",
                 "login",
-                "name");
+                LocalDate.of(1999, 10, 10));
         User user2 = new User("qwerty@mail.ru",
                 "login",
-                "name");
+                LocalDate.of(1999, 10, 10));
         assertEquals(user1, userController.create(user1));
         assertEquals(user1, userController.put(user2));
     }
@@ -69,10 +69,10 @@ class UserControllerTest {
     void shouldChangeUserOK() {
         User user1 = new User("qwerty@mail.ru",
                 "login1",
-                "name1");
+                LocalDate.of(1999, 10, 10));
         User user2 = new User("qwerty@mail.ru",
                 "login2",
-                "name2");
+                LocalDate.of(1999, 10, 10));
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.put(user2));
     }
@@ -81,24 +81,24 @@ class UserControllerTest {
     void shouldGetUsersOK() {
         User user1 = new User("qwerty1@mail.ru",
                 "login1",
-                "name1");
+                LocalDate.of(1999, 10, 10));
         User user2 = new User("qwerty2@mail.ru",
                 "login2",
-                "name2");
+                LocalDate.of(1999, 10, 10));
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
 
         Map<String, User> users = new HashMap<>();
-        users.put(user1.getName(), user1);
-        users.put(user2.getName(), user2);
+        users.put(user1.getEmail(), user1);
+        users.put(user2.getEmail(), user2);
 
         //Надо проверять всех пользователей, т.к. сравнение assertEquals не работает с мапами
         Collection<User> result = userController.findAll();
         for(User currentUser: result)
         {
-            String currentName = currentUser.getName();
-            assertTrue(users.containsKey(currentName));
-            assertEquals(users.get(currentName), currentUser);
+            String currentEmail = currentUser.getEmail();
+            assertTrue(users.containsKey(currentEmail));
+            assertEquals(users.get(currentEmail), currentUser);
         }
     }
 
@@ -106,28 +106,28 @@ class UserControllerTest {
     void shouldGetUsersAfterChangesOK() {
         User user1 = new User("qwerty1@mail.ru",
                 "login1",
-                "name1");
+                LocalDate.of(1999, 10, 10));
         User user2 = new User("qwerty2@mail.ru",
                 "login2",
-                "name");
+                LocalDate.of(1999, 10, 10));
         User newUser1 = new User("qwerty1@mail.ru",
                 "login111",
-                "name111");
+                LocalDate.of(1999, 10, 10));
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
         assertEquals(newUser1, userController.put(newUser1));
 
         Map<String, User> users = new HashMap<>();
-        users.put(newUser1.getName(), newUser1);
-        users.put(user2.getName(), user2);
+        users.put(newUser1.getEmail(), newUser1);
+        users.put(user2.getEmail(), user2);
 
         //Надо проверять всех пользователей, т.к. сравнение assertEquals не работает с мапами
         Collection<User> result = userController.findAll();
         for(User currentUser: result)
         {
-            String currentName = currentUser.getName();
-            assertTrue(users.containsKey(currentName));
-            assertEquals(users.get(currentName), currentUser);
+            String currentEmail = currentUser.getEmail();
+            assertTrue(users.containsKey(currentEmail));
+            assertEquals(users.get(currentEmail), currentUser);
         }
     }
 
@@ -140,13 +140,13 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldThrowObjectAlreadyExistExceptionBecauseOfName() throws ObjectAlreadyExistException {
+    void shouldThrowObjectAlreadyExistExceptionBecauseOfEmail() throws ObjectAlreadyExistException {
         User user1 = new User("qwerty@mail.ru",
                 "login1",
-                "name1");
+                LocalDate.of(1999, 10, 10));
         User user2 = new User("qwerty@mail.ru",
                 "login2",
-                "name2");
+                LocalDate.of(1999, 10, 10));
         userController.create(user1);
         Assertions.assertThrows(ObjectAlreadyExistException.class, () -> {
             userController.create(user2);
@@ -157,7 +157,7 @@ class UserControllerTest {
     void shouldThrowValidationExceptionBecauseOfBadEmail1() throws ValidationException {
         User user = new User("qwertymail.ru",
                 "login",
-                "name");
+                LocalDate.of(1999, 10, 10));
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
         });
@@ -167,7 +167,7 @@ class UserControllerTest {
     void shouldThrowValidationExceptionBecauseOfEmptyEmail() throws ValidationException {
         User user = new User("          ",
                 "login",
-                "name");
+                LocalDate.of(1999, 10, 10));
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
         });
@@ -177,7 +177,7 @@ class UserControllerTest {
     void shouldThrowValidationExceptionBecauseOfBirthday() throws ValidationException {
         User user = new User("qwerty@mail.ru",
                 "login",
-                "name");
+                LocalDate.of(1999, 10, 10));
         user.setBirthday(LocalDate.of(19999, 11, 11));
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
@@ -188,7 +188,7 @@ class UserControllerTest {
     void shouldThrowValidationExceptionBecauseOfSpacesInLogin() throws ValidationException {
         User user = new User("qwerty@mail.ru",
                 "l o g i n",
-                "name");
+                LocalDate.of(1999, 10, 10));
         user.setBirthday(LocalDate.of(19999, 11, 11));
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
@@ -199,7 +199,7 @@ class UserControllerTest {
     void shouldThrowValidationExceptionBecauseOfEmptyLogin() throws ValidationException {
         User user = new User("qwerty@mail.ru",
                 "",
-                "name");
+                LocalDate.of(1999, 10, 10));
         user.setBirthday(LocalDate.of(19999, 11, 11));
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);

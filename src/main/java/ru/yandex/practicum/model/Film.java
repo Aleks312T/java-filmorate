@@ -14,6 +14,7 @@ public class Film {
     @NonNull
     String name;
 
+    @NonNull
     String description;
 
     @NonNull

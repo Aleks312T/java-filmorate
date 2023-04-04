@@ -12,14 +12,14 @@ import java.time.LocalDate;
 import java.util.*;
 
 @RestController
-@RequestMapping("/Users")
+@RequestMapping("/users")
 public class UserController {
     private final Map<String, User> users = new HashMap<>();
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping
     public Collection<User> findAll() {
-        log.info("Получен запрос Get /Users.");
+        log.info("Получен запрос Get /users.");
         log.debug("Текущее количество пользователей: {}", users.size());
 
         return users.values();
@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping
     public User create(@RequestBody User user) {
-        log.info("Получен запрос Post /Users.");
+        log.info("Получен запрос Post /users.");
         if(validateUser(user))
         {
             log.trace("Пользователь прошел валидацию");
@@ -46,7 +46,7 @@ public class UserController {
 
     @PutMapping
     public User put(@RequestBody User user) {
-        log.info("Получен запрос Put /Users.");
+        log.info("Получен запрос Put /users.");
         if(validateUser(user))
         {
             log.trace("Пользователь прошел валидацию");
@@ -65,6 +65,8 @@ public class UserController {
     private boolean validateUser(User user)
     {
         //Проверка nonNull аргумента
+        if(user.getName() == null)
+            user.setName(user.getLogin());
         if(user.getName().isBlank())
             user.setName(user.getLogin());
 

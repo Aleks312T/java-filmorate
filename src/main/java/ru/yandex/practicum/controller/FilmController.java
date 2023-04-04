@@ -17,21 +17,21 @@ import java.util.InputMismatchException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/Film")
+@RequestMapping("/films")
 public class FilmController {
     private final Map<String, Film> films = new HashMap<>();
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @GetMapping
     public Collection<Film> findAll() {
-        log.info("Получен запрос Get /Film.");
+        log.info("Получен запрос Get /films.");
         log.debug("Текущее количество фильмов: {}", films.size());
         return films.values();
     }
 
     @PostMapping
     public Film create(@RequestBody Film film) {
-        log.info("Получен запрос Post /Film.");
+        log.info("Получен запрос Post /films.");
         if(validateFilm(film))
         {
             log.trace("Фильм прошел валидацию");
@@ -49,7 +49,7 @@ public class FilmController {
 
     @PutMapping
     public Film put(@RequestBody Film film) {
-        log.info("Получен запрос Put /Film.");
+        log.info("Получен запрос Put /films.");
         if(validateFilm(film))
         {
             log.trace("Фильм прошел валидацию");

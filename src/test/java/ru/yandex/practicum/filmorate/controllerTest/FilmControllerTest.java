@@ -31,6 +31,7 @@ class FilmControllerTest {
     @Test
     void shouldPostFilmsOK() {
         Film film = new Film("qwerty",
+                "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
         assertEquals(film, filmController.create(film));
@@ -39,6 +40,7 @@ class FilmControllerTest {
     @Test
     void shouldPutFilmsOK() {
         Film film = new Film("qwerty",
+                "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
         assertEquals(film, filmController.put(film));
@@ -47,6 +49,7 @@ class FilmControllerTest {
     @Test
     void shouldPutAndCreateSameFilmOK(){
         Film film = new Film("qwerty",
+                "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
         assertEquals(film, filmController.create(film));
@@ -56,9 +59,11 @@ class FilmControllerTest {
     @Test
     void shouldGetAllFilmsOK(){
         Film film1 = new Film("qwerty1",
+                "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
         Film film2 = new Film("qwerty2",
+                "Description",
                 LocalDate.of(2000, 11, 11),
                 180);
         assertEquals(film1, filmController.create(film1));
@@ -81,12 +86,15 @@ class FilmControllerTest {
     @Test
     void shouldGetAllFilmsAfterChangesOK(){
         Film film1 = new Film("qwerty1",
+                "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
         Film film2 = new Film("qwerty2",
+                "Description",
                 LocalDate.of(2000, 11, 11),
                 180);
         Film newFilm1 = new Film("qwerty1",
+                "Description",
                 LocalDate.of(2020, 5, 5),
                 120);
         assertEquals(film1, filmController.create(film1));
@@ -110,9 +118,11 @@ class FilmControllerTest {
     @Test
     void shouldPutFilmOKWithChanges(){
         Film film1 = new Film("qwerty1",
+                "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
         Film film2 = new Film("qwerty2",
+                "Description",
                 LocalDate.of(2000, 11, 11),
                 180);
         assertEquals(film1, filmController.create(film1));
@@ -130,9 +140,11 @@ class FilmControllerTest {
     @Test
     void shouldThrowObjectAlreadyExistExceptionBecauseOfName() throws ObjectAlreadyExistException{
         Film film1 = new Film("qwerty",
+                "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
         Film film2 = new Film("qwerty",
+                "Description",
                 LocalDate.of(2000, 11, 11),
                 180);
         filmController.create(film1);
@@ -144,6 +156,7 @@ class FilmControllerTest {
     @Test
     void shouldThrowValidationExceptionBecauseOfName() throws ValidationException{
         Film film = new Film("     ",
+                "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -154,6 +167,7 @@ class FilmControllerTest {
     @Test
     void shouldThrowValidationExceptionBecauseOfDateInPast() throws ValidationException{
         Film film = new Film("qwerty",
+                "Description",
                 LocalDate.of(199, 10, 10),
                 120);
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -164,6 +178,7 @@ class FilmControllerTest {
     @Test
     void shouldThrowValidationExceptionBecauseOfDateInFuture() throws ValidationException{
         Film film = new Film("qwerty",
+                "Description",
                 LocalDate.of(19999, 10, 10),
                 120);
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -173,22 +188,22 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfDescription() throws ValidationException{
+        //Очень длинное описание...
         Film film = new Film("qwerty",
+                "— Лишь Машинное Правоверие несёт совершенство. Лишь оно несёт благодать.\n\n" +
+                        "Произнеся это своим синтезированным голосом, который эхом разнёсся по внутреннему двору " +
+                        "Чистой базилики, Элеш Норн, Фирексийский регент и Матерь Машин, ощутила свет этой истины глубоко " +
+                        "внутри своего священного механического тела. Машинное Правоверие было единственным путём к " +
+                        "окончательному объединению, путём столь же чистым, непогрешимым и несомненным, как и само её " +
+                        "блестящее масло.\n\n" +
+                        "Норн никогда ещё не была так в этом уверена, как сейчас, когда она, сверкая доспехами в " +
+                        "молочно-белом свете, обвела взглядом собравшихся фирексийцев со своего амвона. То были " +
+                        "символы достигнутого ею могущества: Чистая базилика, её башни, её металлические шпили, " +
+                        "подобные фарфору, величественные соборы, устремлённые ввысь, извитые, тонкие и воздушные. " +
+                        "На мостиках и зубцах реяли багровые знамёна, резко выделяясь на фоне сверкающих построек " +
+                        "и каменных плит, выстилающих двор.\n\n",
                 LocalDate.of(1999, 10, 10),
                 120);
-        //Очень длинное описание...
-        film.setDescription("— Лишь Машинное Правоверие несёт совершенство. Лишь оно несёт благодать.\n\n" +
-                "Произнеся это своим синтезированным голосом, который эхом разнёсся по внутреннему двору " +
-                "Чистой базилики, Элеш Норн, Фирексийский регент и Матерь Машин, ощутила свет этой истины глубоко " +
-                "внутри своего священного механического тела. Машинное Правоверие было единственным путём к " +
-                "окончательному объединению, путём столь же чистым, непогрешимым и несомненным, как и само её " +
-                "блестящее масло.\n\n" +
-                "Норн никогда ещё не была так в этом уверена, как сейчас, когда она, сверкая доспехами в " +
-                "молочно-белом свете, обвела взглядом собравшихся фирексийцев со своего амвона. То были " +
-                "символы достигнутого ею могущества: Чистая базилика, её башни, её металлические шпили, " +
-                "подобные фарфору, величественные соборы, устремлённые ввысь, извитые, тонкие и воздушные. " +
-                "На мостиках и зубцах реяли багровые знамёна, резко выделяясь на фоне сверкающих построек " +
-                "и каменных плит, выстилающих двор.\n\n");
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });
@@ -197,6 +212,7 @@ class FilmControllerTest {
     @Test
     void shouldThrowValidationExceptionBecauseOfDuration() throws ValidationException{
         Film film = new Film("qwerty",
+                "Description",
                 LocalDate.of(1999, 10, 10),
                 -120);
         Assertions.assertThrows(ValidationException.class, () -> {
