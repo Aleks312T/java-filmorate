@@ -33,6 +33,8 @@ public class FilmController {
             log.trace("Фильм прошел валидацию");
             if(films.containsKey(film.getName()))
                 throw new ObjectAlreadyExistException("Фильм с названием " + film.getName() + " уже существует.");
+            if(film.getId() == 0)
+                film.setId(films.size() + 1);
             films.put(film.getName(), film);
         } else
         {
@@ -56,6 +58,8 @@ public class FilmController {
         if(validateFilm(film))
         {
             log.trace("Фильм прошел валидацию");
+            if(film.getId() == 0)
+                film.setId(films.size());
             //Не выводим ошибку о наличии фильма из-за метода put
             films.put(film.getName(), film);
         } else
