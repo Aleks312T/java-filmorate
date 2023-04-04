@@ -67,8 +67,7 @@ class FilmControllerTest {
 
         //Надо проверять все фильмы, т.к. сравнение assertEquals не работает с мапами
         Collection<Film> result = filmController.findAll();
-        for(Film currentFilm: result)
-        {
+        for(Film currentFilm: result) {
             Integer currentId = currentFilm.getId();
             assertTrue(films.containsKey(currentId));
             assertEquals(films.get(currentId), currentFilm);
@@ -105,8 +104,7 @@ class FilmControllerTest {
 
         //Надо проверять все фильмы, т.к. сравнение assertEquals не работает с мапами
         Collection<Film> result = filmController.findAll();
-        for(Film currentFilm: result)
-        {
+        for(Film currentFilm: result) {
             Integer currentId = currentFilm.getId();
             assertTrue(films.containsKey(currentId));
             assertEquals(films.get(currentId), currentFilm);

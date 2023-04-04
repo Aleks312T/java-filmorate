@@ -28,20 +28,17 @@ public class UserController {
     @PostMapping
     public User create(@RequestBody User user) {
         log.info("Получен запрос Post /users.");
-        if(users.containsKey(user.getId()))
-        {
+        if (users.containsKey(user.getId())) {
             String errorMessage = "Пользователь с Id " + user.getId() + " уже существует.";
             log.warn(errorMessage);
             throw new ObjectAlreadyExistException();
         } else
-        if(validateUser(user))
-        {
+        if (validateUser(user)) {
             log.trace("Пользователь {} прошел валидацию", user.getId());
             if(user.getId() == 0)
                 user.setId(users.size() + 1);
             users.put(user.getId(), user);
-        } else
-        {
+        } else {
             String errorMessage = "Пользователь " + user.getId() + " не прошел валидацию";
             log.warn(errorMessage);
             throw new ValidationException();
@@ -52,22 +49,19 @@ public class UserController {
     @PutMapping
     public User put(@RequestBody User user) {
         log.info("Получен запрос Put /users.");
-        if(!users.containsKey(user.getId()) || user.getId() == 0)
-        {
+        if (!users.containsKey(user.getId()) || user.getId() == 0) {
             String errorMessage = "На обновление пришел пользователь с неизвестным Id = " + user.getId();
             log.warn(errorMessage);
             //Не уверен в том, какое исключение нужно выдавать
             throw new RuntimeException();
-        }
-        if(validateUser(user))
-        {
+        } else
+        if (validateUser(user)) {
             log.trace("Пользователь {} прошел валидацию", user.getId());
             if(user.getId() == 0)
                 user.setId(users.size());
             //Не выводим ошибку о наличии пользователя из-за метода put
             users.put(user.getId(), user);
-        } else
-        {
+        } else {
             String errorMessage = "Пользователь " + user.getId() + " не прошел валидацию";
             log.warn(errorMessage);
             throw new ValidationException();
@@ -78,15 +72,15 @@ public class UserController {
     private boolean validateUser(User user)
     {
         //Проверка nonNull аргумента
-        if(user.getName() == null)
+        if (user.getName() == null)
             user.setName(user.getLogin());
-        if(user.getName().isBlank())
+        if (user.getName().isBlank())
             user.setName(user.getLogin());
 
         //isBlank, чтобы отсеять пробелы
-        if(user.getEmail().isBlank() || !user.getEmail().contains("@"))
+        if (user.getEmail().isBlank() || !user.getEmail().contains("@"))
             return false;
-        if(user.getLogin().isEmpty() || user.getLogin().contains(" "))
+        if (user.getLogin().isEmpty() || user.getLogin().contains(" "))
             return false;
         return !user.getBirthday().isAfter(LocalDate.now());
 
