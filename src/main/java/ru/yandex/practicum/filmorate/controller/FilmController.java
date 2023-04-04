@@ -28,20 +28,17 @@ public class FilmController {
     @PostMapping
     public Film create(@RequestBody Film film) {
         log.info("Получен запрос Post /films.");
-        if(films.containsKey(film.getId()))
-        {
+        if (films.containsKey(film.getId())) {
             String errorMessage = "Фильм с Id " + film.getId() + " уже существует.";
             log.warn(errorMessage);
             throw new ObjectAlreadyExistException();
         } else
-        if(validateFilm(film))
-        {
+        if (validateFilm(film)) {
             log.trace("Фильм {} прошел валидацию", film.getId());
             if(film.getId() == 0)
                 film.setId(films.size() + 1);
             films.put(film.getId(), film);
-        } else
-        {
+        } else {
             String errorMessage = "Фильм " + film.getId() + " не прошел валидацию";
             log.warn(errorMessage);
             throw new ValidationException();
@@ -52,22 +49,19 @@ public class FilmController {
     @PutMapping
     public Film put(@RequestBody Film film) {
         log.info("Получен запрос Put /films.");
-        if(!films.containsKey(film.getId()) || film.getId() == 0)
-        {
+        if (!films.containsKey(film.getId()) || film.getId() == 0) {
             String errorMessage = "На обновление пришел фильм с неизвестным Id = " + film.getId();
             log.warn(errorMessage);
             //Не уверен в том, какое исключение нужно выдавать
             throw new RuntimeException();
-        }
-        if(validateFilm(film))
-        {
+        } else
+        if (validateFilm(film)) {
             log.trace("Фильм {} прошел валидацию", film.getId());
             if(film.getId() == 0)
                 film.setId(films.size());
             //Не выводим ошибку о наличии фильма из-за метода put
             films.put(film.getId(), film);
-        } else
-        {
+        } else {
             String errorMessage = "Фильм " + film.getId() + " не прошел валидацию";
             log.warn(errorMessage);
             throw new ValidationException();
@@ -75,18 +69,17 @@ public class FilmController {
         return film;
     }
 
-    private boolean validateFilm(Film film)
-    {
-        if(film.getName().isBlank())
+    private boolean validateFilm(Film film) {
+        if (film.getName().isBlank())
             return false;
-        if(film.getDescription().length() > 200)
+        if (film.getDescription().length() > 200)
             return false;
         //День рождение кино
-        if(film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)))
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)))
             return false;
-        if(film.getReleaseDate().isAfter(LocalDate.now()))
+        if (film.getReleaseDate().isAfter(LocalDate.now()))
             return false;
-        if(film.getDuration() <= 0)
+        if (film.getDuration() <= 0)
             return false;
 
         return true;
