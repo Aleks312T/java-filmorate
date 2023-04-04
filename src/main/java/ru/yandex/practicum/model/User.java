@@ -12,12 +12,12 @@ public class User {
     int id;
 
     @NonNull
-    String email;
-
-    @NonNull
     String login;
 
     String name;
+
+    @NonNull
+    String email;
 
     @NonNull
     LocalDate birthday;

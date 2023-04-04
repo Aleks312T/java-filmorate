@@ -29,24 +29,24 @@ class UserControllerTest {
 
     @Test
     void shouldPostUserOK() {
-        User user = new User("qwerty@mail.ru",
-                "login",
+        User user = new User("login",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         assertEquals(user, userController.create(user));
     }
 
     @Test
     void shouldPutUserOK() {
-        User user = new User("qwerty@mail.ru",
-                "login",
+        User user = new User("login",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         assertEquals(user, userController.put(user));
     }
 
     @Test
     void shouldUseLoginForEmptyNameOK() {
-        User user = new User("qwerty@mail.ru",
-                "login",
+        User user = new User("login",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         User result = userController.create(user);
         assertEquals(user, result);
@@ -55,11 +55,11 @@ class UserControllerTest {
 
     @Test
     void shouldPutSameUserAgainOK() {
-        User user1 = new User("qwerty@mail.ru",
-                "login",
+        User user1 = new User("login",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
-        User user2 = new User("qwerty@mail.ru",
-                "login",
+        User user2 = new User("login",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         assertEquals(user1, userController.create(user1));
         assertEquals(user1, userController.put(user2));
@@ -67,11 +67,11 @@ class UserControllerTest {
 
     @Test
     void shouldChangeUserOK() {
-        User user1 = new User("qwerty@mail.ru",
-                "login1",
+        User user1 = new User("login1",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
-        User user2 = new User("qwerty@mail.ru",
-                "login2",
+        User user2 = new User("login2",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.put(user2));
@@ -79,11 +79,11 @@ class UserControllerTest {
 
     @Test
     void shouldGetUsersOK() {
-        User user1 = new User("qwerty1@mail.ru",
-                "login1",
+        User user1 = new User("login1",
+                "qwerty1@mail.ru",
                 LocalDate.of(1999, 10, 10));
-        User user2 = new User("qwerty2@mail.ru",
-                "login2",
+        User user2 = new User("login2",
+                "qwerty2@mail.ru",
                 LocalDate.of(1999, 10, 10));
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
@@ -104,14 +104,14 @@ class UserControllerTest {
 
     @Test
     void shouldGetUsersAfterChangesOK() {
-        User user1 = new User("qwerty1@mail.ru",
-                "login1",
+        User user1 = new User("login1",
+                "qwerty1@mail.ru",
                 LocalDate.of(1999, 10, 10));
-        User user2 = new User("qwerty2@mail.ru",
-                "login2",
+        User user2 = new User("login2",
+                "qwerty2@mail.ru",
                 LocalDate.of(1999, 10, 10));
-        User newUser1 = new User("qwerty1@mail.ru",
-                "login111",
+        User newUser1 = new User("login111",
+                "qwerty1@mail.ru",
                 LocalDate.of(1999, 10, 10));
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
@@ -141,11 +141,11 @@ class UserControllerTest {
 
     @Test
     void shouldThrowObjectAlreadyExistExceptionBecauseOfEmail() throws ObjectAlreadyExistException {
-        User user1 = new User("qwerty@mail.ru",
-                "login1",
+        User user1 = new User("login1",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
-        User user2 = new User("qwerty@mail.ru",
-                "login2",
+        User user2 = new User("login2",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         userController.create(user1);
         Assertions.assertThrows(ObjectAlreadyExistException.class, () -> {
@@ -155,8 +155,8 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfBadEmail1() throws ValidationException {
-        User user = new User("qwertymail.ru",
-                "login",
+        User user = new User("login",
+                "qwertymail.ru",
                 LocalDate.of(1999, 10, 10));
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
@@ -165,8 +165,8 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfEmptyEmail() throws ValidationException {
-        User user = new User("          ",
-                "login",
+        User user = new User("login",
+                "             ",
                 LocalDate.of(1999, 10, 10));
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
@@ -175,8 +175,8 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfBirthday() throws ValidationException {
-        User user = new User("qwerty@mail.ru",
-                "login",
+        User user = new User("login",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         user.setBirthday(LocalDate.of(19999, 11, 11));
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -186,8 +186,8 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfSpacesInLogin() throws ValidationException {
-        User user = new User("qwerty@mail.ru",
-                "l o g i n",
+        User user = new User("l o g i n",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         user.setBirthday(LocalDate.of(19999, 11, 11));
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -197,8 +197,8 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfEmptyLogin() throws ValidationException {
-        User user = new User("qwerty@mail.ru",
-                "",
+        User user = new User("",
+                "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
         user.setBirthday(LocalDate.of(19999, 11, 11));
         Assertions.assertThrows(ValidationException.class, () -> {

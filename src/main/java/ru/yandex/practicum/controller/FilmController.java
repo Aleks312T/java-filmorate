@@ -1,19 +1,15 @@
 package ru.yandex.practicum.controller;
 
-import lombok.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.exception.ValidationException;
 import ru.yandex.practicum.model.Film;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.yandex.practicum.model.User;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.Map;
 
 @RestController
