@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody @NonNull User user) {
+    public User create(@RequestBody User user) {
         log.info("Получен запрос Post /Users.");
         if(validateUser(user))
         {
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User put(@RequestBody @NonNull User user) {
+    public User put(@RequestBody User user) {
         log.info("Получен запрос Put /Users.");
         if(validateUser(user))
         {

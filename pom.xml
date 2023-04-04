@@ -42,7 +42,6 @@
 			<version>1.18.26</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<!-- добавление библиотеки GSON -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

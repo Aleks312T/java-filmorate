@@ -29,8 +29,7 @@ class UserControllerTest {
 
     @Test
     void shouldPostUserOK() {
-        User user = new User(1,
-                "qwerty@mail.ru",
+        User user = new User("qwerty@mail.ru",
                 "login",
                 "name");
         assertEquals(user, userController.create(user));
@@ -38,8 +37,7 @@ class UserControllerTest {
 
     @Test
     void shouldPutUserOK() {
-        User user = new User(1,
-                "qwerty@mail.ru",
+        User user = new User("qwerty@mail.ru",
                 "login",
                 "name");
         assertEquals(user, userController.put(user));
@@ -47,8 +45,7 @@ class UserControllerTest {
 
     @Test
     void shouldUseLoginForEmptyNameOK() {
-        User user = new User(1,
-                "qwerty@mail.ru",
+        User user = new User("qwerty@mail.ru",
                 "login",
                 "");
         User result = userController.create(user);
@@ -58,12 +55,10 @@ class UserControllerTest {
 
     @Test
     void shouldPutSameUserAgainOK() {
-        User user1 = new User(1,
-                "qwerty@mail.ru",
+        User user1 = new User("qwerty@mail.ru",
                 "login",
                 "name");
-        User user2 = new User(1,
-                "qwerty@mail.ru",
+        User user2 = new User("qwerty@mail.ru",
                 "login",
                 "name");
         assertEquals(user1, userController.create(user1));
@@ -72,12 +67,10 @@ class UserControllerTest {
 
     @Test
     void shouldChangeUserOK() {
-        User user1 = new User(1,
-                "qwerty@mail.ru",
+        User user1 = new User("qwerty@mail.ru",
                 "login1",
                 "name1");
-        User user2 = new User(1,
-                "qwerty@mail.ru",
+        User user2 = new User("qwerty@mail.ru",
                 "login2",
                 "name2");
         assertEquals(user1, userController.create(user1));
@@ -86,12 +79,10 @@ class UserControllerTest {
 
     @Test
     void shouldGetUsersOK() {
-        User user1 = new User(1,
-                "qwerty1@mail.ru",
+        User user1 = new User("qwerty1@mail.ru",
                 "login1",
                 "name1");
-        User user2 = new User(1,
-                "qwerty2@mail.ru",
+        User user2 = new User("qwerty2@mail.ru",
                 "login2",
                 "name2");
         assertEquals(user1, userController.create(user1));
@@ -113,16 +104,13 @@ class UserControllerTest {
 
     @Test
     void shouldGetUsersAfterChangesOK() {
-        User user1 = new User(1,
-                "qwerty1@mail.ru",
+        User user1 = new User("qwerty1@mail.ru",
                 "login1",
                 "name1");
-        User user2 = new User(1,
-                "qwerty2@mail.ru",
+        User user2 = new User("qwerty2@mail.ru",
                 "login2",
-                "name2");
-        User newUser1 = new User(1,
-                "qwerty1@mail.ru",
+                "name");
+        User newUser1 = new User("qwerty1@mail.ru",
                 "login111",
                 "name111");
         assertEquals(user1, userController.create(user1));
@@ -153,12 +141,10 @@ class UserControllerTest {
 
     @Test
     void shouldThrowObjectAlreadyExistExceptionBecauseOfName() throws ObjectAlreadyExistException {
-        User user1 = new User(1,
-                "qwerty@mail.ru",
+        User user1 = new User("qwerty@mail.ru",
                 "login1",
                 "name1");
-        User user2 = new User(1,
-                "qwerty@mail.ru",
+        User user2 = new User("qwerty@mail.ru",
                 "login2",
                 "name2");
         userController.create(user1);
@@ -169,8 +155,7 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfBadEmail1() throws ValidationException {
-        User user = new User(1,
-                "qwertymail.ru",
+        User user = new User("qwertymail.ru",
                 "login",
                 "name");
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -180,8 +165,7 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfEmptyEmail() throws ValidationException {
-        User user = new User(1,
-                "             ",
+        User user = new User("          ",
                 "login",
                 "name");
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -191,8 +175,7 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfBirthday() throws ValidationException {
-        User user = new User(1,
-                "qwerty@mail.ru",
+        User user = new User("qwerty@mail.ru",
                 "login",
                 "name");
         user.setBirthday(LocalDate.of(19999, 11, 11));
@@ -203,9 +186,8 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfSpacesInLogin() throws ValidationException {
-        User user = new User(1,
-                "qwerty@mail.ru",
-                " l o g i n ",
+        User user = new User("qwerty@mail.ru",
+                "l o g i n",
                 "name");
         user.setBirthday(LocalDate.of(19999, 11, 11));
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -215,8 +197,7 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfEmptyLogin() throws ValidationException {
-        User user = new User(1,
-                "qwerty@mail.ru",
+        User user = new User("qwerty@mail.ru",
                 "",
                 "name");
         user.setBirthday(LocalDate.of(19999, 11, 11));

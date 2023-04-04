@@ -1,14 +1,14 @@
 package ru.yandex.practicum.model;
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
-    @NonNull
     int id;
 
     @NonNull

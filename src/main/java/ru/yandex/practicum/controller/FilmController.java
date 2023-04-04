@@ -30,7 +30,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film create(@RequestBody @NonNull Film film) {
+    public Film create(@RequestBody Film film) {
         log.info("Получен запрос Post /Film.");
         if(validateFilm(film))
         {
@@ -48,7 +48,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film put(@RequestBody @NonNull Film film) {
+    public Film put(@RequestBody Film film) {
         log.info("Получен запрос Put /Film.");
         if(validateFilm(film))
         {

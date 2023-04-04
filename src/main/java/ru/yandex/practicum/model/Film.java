@@ -1,16 +1,14 @@
 package ru.yandex.practicum.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
 
-import java.time.Duration;
 import java.time.LocalDate;
 
 @Data
-@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Film {
-    @NonNull
     int id;
 
     @NonNull

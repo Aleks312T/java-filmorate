@@ -30,8 +30,7 @@ class FilmControllerTest {
 
     @Test
     void shouldPostFilmsOK() {
-        Film film = new Film(1,
-                "qwerty",
+        Film film = new Film("qwerty",
                 LocalDate.of(1999, 10, 10),
                 120);
         assertEquals(film, filmController.create(film));
@@ -39,8 +38,7 @@ class FilmControllerTest {
 
     @Test
     void shouldPutFilmsOK() {
-        Film film = new Film(1,
-                "qwerty",
+        Film film = new Film("qwerty",
                 LocalDate.of(1999, 10, 10),
                 120);
         assertEquals(film, filmController.put(film));
@@ -48,8 +46,7 @@ class FilmControllerTest {
 
     @Test
     void shouldPutAndCreateSameFilmOK(){
-        Film film = new Film(1,
-                "qwerty",
+        Film film = new Film("qwerty",
                 LocalDate.of(1999, 10, 10),
                 120);
         assertEquals(film, filmController.create(film));
@@ -58,12 +55,10 @@ class FilmControllerTest {
 
     @Test
     void shouldGetAllFilmsOK(){
-        Film film1 = new Film(1,
-                "qwerty1",
+        Film film1 = new Film("qwerty1",
                 LocalDate.of(1999, 10, 10),
                 120);
-        Film film2 = new Film(1,
-                "qwerty2",
+        Film film2 = new Film("qwerty2",
                 LocalDate.of(2000, 11, 11),
                 180);
         assertEquals(film1, filmController.create(film1));
@@ -85,16 +80,13 @@ class FilmControllerTest {
 
     @Test
     void shouldGetAllFilmsAfterChangesOK(){
-        Film film1 = new Film(1,
-                "qwerty1",
+        Film film1 = new Film("qwerty1",
                 LocalDate.of(1999, 10, 10),
                 120);
-        Film film2 = new Film(1,
-                "qwerty2",
+        Film film2 = new Film("qwerty2",
                 LocalDate.of(2000, 11, 11),
                 180);
-        Film newFilm1 = new Film(1,
-                "qwerty1",
+        Film newFilm1 = new Film("qwerty1",
                 LocalDate.of(2020, 5, 5),
                 120);
         assertEquals(film1, filmController.create(film1));
@@ -117,12 +109,10 @@ class FilmControllerTest {
 
     @Test
     void shouldPutFilmOKWithChanges(){
-        Film film1 = new Film(1,
-                "qwerty1",
+        Film film1 = new Film("qwerty1",
                 LocalDate.of(1999, 10, 10),
                 120);
-        Film film2 = new Film(1,
-                "qwerty2",
+        Film film2 = new Film("qwerty2",
                 LocalDate.of(2000, 11, 11),
                 180);
         assertEquals(film1, filmController.create(film1));
@@ -139,12 +129,10 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowObjectAlreadyExistExceptionBecauseOfName() throws ObjectAlreadyExistException{
-        Film film1 = new Film(1,
-                "qwerty",
+        Film film1 = new Film("qwerty",
                 LocalDate.of(1999, 10, 10),
                 120);
-        Film film2 = new Film(1,
-                "qwerty",
+        Film film2 = new Film("qwerty",
                 LocalDate.of(2000, 11, 11),
                 180);
         filmController.create(film1);
@@ -155,8 +143,7 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfName() throws ValidationException{
-        Film film = new Film(1,
-                "     ",
+        Film film = new Film("     ",
                 LocalDate.of(1999, 10, 10),
                 120);
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -166,8 +153,7 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfDateInPast() throws ValidationException{
-        Film film = new Film(1,
-                "qwerty",
+        Film film = new Film("qwerty",
                 LocalDate.of(199, 10, 10),
                 120);
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -177,8 +163,7 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfDateInFuture() throws ValidationException{
-        Film film = new Film(1,
-                "qwerty",
+        Film film = new Film("qwerty",
                 LocalDate.of(19999, 10, 10),
                 120);
         Assertions.assertThrows(ValidationException.class, () -> {
@@ -188,8 +173,7 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfDescription() throws ValidationException{
-        Film film = new Film(1,
-                "qwerty",
+        Film film = new Film("qwerty",
                 LocalDate.of(1999, 10, 10),
                 120);
         //Очень длинное описание...
@@ -212,8 +196,7 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfDuration() throws ValidationException{
-        Film film = new Film(1,
-                "qwerty",
+        Film film = new Film("qwerty",
                 LocalDate.of(1999, 10, 10),
                 -120);
         Assertions.assertThrows(ValidationException.class, () -> {
