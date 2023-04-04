@@ -50,9 +50,13 @@ class UserControllerTest {
         User user1 = new User("login",
                 "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user1.setId(1);
+
         User user2 = new User("login",
                 "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user2.setId(1);
+
         assertEquals(user1, userController.create(user1));
         assertEquals(user1, userController.put(user2));
     }
@@ -62,9 +66,13 @@ class UserControllerTest {
         User user1 = new User("login1",
                 "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user1.setId(1);
+
         User user2 = new User("login2",
                 "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user2.setId(1);
+
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.put(user2));
     }
@@ -74,23 +82,27 @@ class UserControllerTest {
         User user1 = new User("login1",
                 "qwerty1@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user1.setId(1);
+
         User user2 = new User("login2",
                 "qwerty2@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user1.setId(2);
+
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
 
-        Map<String, User> users = new HashMap<>();
-        users.put(user1.getEmail(), user1);
-        users.put(user2.getEmail(), user2);
+        Map<Integer, User> users = new HashMap<>();
+        users.put(user1.getId(), user1);
+        users.put(user2.getId(), user2);
 
         //Надо проверять всех пользователей, т.к. сравнение assertEquals не работает с мапами
         Collection<User> result = userController.findAll();
         for(User currentUser: result)
         {
-            String currentEmail = currentUser.getEmail();
-            assertTrue(users.containsKey(currentEmail));
-            assertEquals(users.get(currentEmail), currentUser);
+            Integer currentId = currentUser.getId();
+            assertTrue(users.containsKey(currentId));
+            assertEquals(users.get(currentId), currentUser);
         }
     }
 
@@ -99,27 +111,33 @@ class UserControllerTest {
         User user1 = new User("login1",
                 "qwerty1@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user1.setId(1);
+
         User user2 = new User("login2",
                 "qwerty2@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user2.setId(2);
+
         User newUser1 = new User("login111",
                 "qwerty1@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        newUser1.setId(1);
+
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
         assertEquals(newUser1, userController.put(newUser1));
 
-        Map<String, User> users = new HashMap<>();
-        users.put(newUser1.getEmail(), newUser1);
-        users.put(user2.getEmail(), user2);
+        Map<Integer, User> users = new HashMap<>();
+        users.put(newUser1.getId(), newUser1);
+        users.put(user2.getId(), user2);
 
         //Надо проверять всех пользователей, т.к. сравнение assertEquals не работает с мапами
         Collection<User> result = userController.findAll();
         for(User currentUser: result)
         {
-            String currentEmail = currentUser.getEmail();
-            assertTrue(users.containsKey(currentEmail));
-            assertEquals(users.get(currentEmail), currentUser);
+            Integer currentId = currentUser.getId();
+            assertTrue(users.containsKey(currentId));
+            assertEquals(users.get(currentId), currentUser);
         }
     }
 
@@ -142,13 +160,17 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldThrowObjectAlreadyExistExceptionBecauseOfEmail() throws ObjectAlreadyExistException {
+    void shouldThrowObjectAlreadyExistExceptionBecauseOfId() throws ObjectAlreadyExistException {
         User user1 = new User("login1",
                 "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user1.setId(1);
+
         User user2 = new User("login2",
                 "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
+        user2.setId(1);
+
         userController.create(user1);
         Assertions.assertThrows(ObjectAlreadyExistException.class, () -> {
             userController.create(user2);

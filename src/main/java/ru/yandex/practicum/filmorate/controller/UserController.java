@@ -15,62 +15,63 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final Map<String, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping
     public Collection<User> findAll() {
         log.info("Получен запрос Get /users.");
         log.debug("Текущее количество пользователей: {}", users.size());
-
         return users.values();
     }
 
     @PostMapping
     public User create(@RequestBody User user) {
         log.info("Получен запрос Post /users.");
+        if(users.containsKey(user.getId()))
+        {
+            String errorMessage = "Пользователь с Id " + user.getId() + " уже существует.";
+            log.warn(errorMessage);
+            throw new ObjectAlreadyExistException();
+        } else
         if(validateUser(user))
         {
-            log.trace("Пользователь прошел валидацию");
-            if(users.containsKey(user.getEmail()))
-                throw new ObjectAlreadyExistException("Пользователь с почтой " + user.getEmail() + " уже существует");
+            log.trace("Пользователь {} прошел валидацию", user.getId());
             if(user.getId() == 0)
                 user.setId(users.size() + 1);
-            users.put(user.getEmail(), user);
+            users.put(user.getId(), user);
         } else
         {
-            String errorMessage = "Пользователь не прошел валидацию";
+            String errorMessage = "Пользователь " + user.getId() + " не прошел валидацию";
             log.warn(errorMessage);
             throw new ValidationException();
         }
-
         return user;
     }
 
     @PutMapping
     public User put(@RequestBody User user) {
         log.info("Получен запрос Put /users.");
-        if(!users.containsKey(user.getEmail()))
+        if(!users.containsKey(user.getId()) || user.getId() == 0)
         {
-            String errorMessage = "Пришел неизвестный фильм на обновление";
+            String errorMessage = "На обновление пришел пользователь с неизвестным Id = " + user.getId();
             log.warn(errorMessage);
             //Не уверен в том, какое исключение нужно выдавать
             throw new RuntimeException();
         }
         if(validateUser(user))
         {
-            log.trace("Пользователь прошел валидацию");
+            log.trace("Пользователь {} прошел валидацию", user.getId());
             if(user.getId() == 0)
                 user.setId(users.size());
             //Не выводим ошибку о наличии пользователя из-за метода put
-            users.put(user.getEmail(), user);
+            users.put(user.getId(), user);
         } else
         {
-            String errorMessage = "Пользователь не прошел валидацию";
+            String errorMessage = "Пользователь " + user.getId() + " не прошел валидацию";
             log.warn(errorMessage);
             throw new ValidationException();
         }
-
         return user;
     }
 

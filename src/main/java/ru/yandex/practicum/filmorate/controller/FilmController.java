@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private final Map<String, Film> films = new HashMap<>();
+    private final Map<Integer, Film> films = new HashMap<>();
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @GetMapping
@@ -28,17 +28,21 @@ public class FilmController {
     @PostMapping
     public Film create(@RequestBody Film film) {
         log.info("Получен запрос Post /films.");
+        if(films.containsKey(film.getId()))
+        {
+            String errorMessage = "Фильм с Id " + film.getId() + " уже существует.";
+            log.warn(errorMessage);
+            throw new ObjectAlreadyExistException();
+        } else
         if(validateFilm(film))
         {
-            log.trace("Фильм прошел валидацию");
-            if(films.containsKey(film.getName()))
-                throw new ObjectAlreadyExistException("Фильм с названием " + film.getName() + " уже существует.");
+            log.trace("Фильм {} прошел валидацию", film.getId());
             if(film.getId() == 0)
                 film.setId(films.size() + 1);
-            films.put(film.getName(), film);
+            films.put(film.getId(), film);
         } else
         {
-            String errorMessage = "Фильм не прошел валидацию";
+            String errorMessage = "Фильм " + film.getId() + " не прошел валидацию";
             log.warn(errorMessage);
             throw new ValidationException();
         }
@@ -48,23 +52,23 @@ public class FilmController {
     @PutMapping
     public Film put(@RequestBody Film film) {
         log.info("Получен запрос Put /films.");
-        if(!films.containsKey(film.getName()))
+        if(!films.containsKey(film.getId()) || film.getId() == 0)
         {
-            String errorMessage = "Пришел неизвестный фильм на обновление";
+            String errorMessage = "На обновление пришел фильм с неизвестным Id = " + film.getId();
             log.warn(errorMessage);
             //Не уверен в том, какое исключение нужно выдавать
             throw new RuntimeException();
         }
         if(validateFilm(film))
         {
-            log.trace("Фильм прошел валидацию");
+            log.trace("Фильм {} прошел валидацию", film.getId());
             if(film.getId() == 0)
                 film.setId(films.size());
             //Не выводим ошибку о наличии фильма из-за метода put
-            films.put(film.getName(), film);
+            films.put(film.getId(), film);
         } else
         {
-            String errorMessage = "Фильм не прошел валидацию";
+            String errorMessage = "Фильм " + film.getId() + " не прошел валидацию";
             log.warn(errorMessage);
             throw new ValidationException();
         }
@@ -73,10 +77,6 @@ public class FilmController {
 
     private boolean validateFilm(Film film)
     {
-        //Проверка nonNull аргумента
-        if(film.getDescription() == null)
-            film.setDescription("");
-
         if(film.getName().isBlank())
             return false;
         if(film.getDescription().length() > 200)

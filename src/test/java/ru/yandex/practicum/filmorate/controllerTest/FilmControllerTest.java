@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -53,24 +52,26 @@ class FilmControllerTest {
                 "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
+        film1.setId(1);
         Film film2 = new Film("qwerty2",
                 "Description",
                 LocalDate.of(2000, 11, 11),
                 180);
+        film2.setId(2);
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.create(film2));
 
-        Map<String, Film> films = new HashMap<>();
-        films.put(film1.getName(), film1);
-        films.put(film2.getName(), film2);
+        Map<Integer, Film> films = new HashMap<>();
+        films.put(film1.getId(), film1);
+        films.put(film2.getId(), film2);
 
         //Надо проверять все фильмы, т.к. сравнение assertEquals не работает с мапами
         Collection<Film> result = filmController.findAll();
         for(Film currentFilm: result)
         {
-            String currentName = currentFilm.getName();
-            assertTrue(films.containsKey(currentName));
-            assertEquals(films.get(currentName), currentFilm);
+            Integer currentId = currentFilm.getId();
+            assertTrue(films.containsKey(currentId));
+            assertEquals(films.get(currentId), currentFilm);
         }
     }
 
@@ -80,29 +81,35 @@ class FilmControllerTest {
                 "Description",
                 LocalDate.of(1999, 10, 10),
                 120);
+        film1.setId(1);
+
         Film film2 = new Film("qwerty2",
                 "Description",
                 LocalDate.of(2000, 11, 11),
                 180);
+        film2.setId(2);
+
         Film newFilm1 = new Film("qwerty1",
                 "Description",
                 LocalDate.of(2020, 5, 5),
                 120);
+        newFilm1.setId(1);
+
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.create(film2));
         assertEquals(newFilm1, filmController.put(newFilm1));
 
-        Map<String, Film> films = new HashMap<>();
-        films.put(film1.getName(), newFilm1);
-        films.put(film2.getName(), film2);
+        Map<Integer, Film> films = new HashMap<>();
+        films.put(film1.getId(), newFilm1);
+        films.put(film2.getId(), film2);
 
         //Надо проверять все фильмы, т.к. сравнение assertEquals не работает с мапами
         Collection<Film> result = filmController.findAll();
         for(Film currentFilm: result)
         {
-            String currentName = currentFilm.getName();
-            assertTrue(films.containsKey(currentName));
-            assertEquals(films.get(currentName), currentFilm);
+            Integer currentId = currentFilm.getId();
+            assertTrue(films.containsKey(currentId));
+            assertEquals(films.get(currentId), currentFilm);
         }
     }
 
@@ -112,10 +119,12 @@ class FilmControllerTest {
                 "Description1",
                 LocalDate.of(1999, 10, 10),
                 120);
+        film1.setId(1);
         Film film2 = new Film("qwerty",
                 "Description2",
                 LocalDate.of(2000, 11, 11),
                 180);
+        film2.setId(1);
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.put(film2));
     }
@@ -140,15 +149,19 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowObjectAlreadyExistExceptionBecauseOfName() throws ObjectAlreadyExistException{
-        Film film1 = new Film("qwerty",
-                "Description",
+    void shouldThrowObjectAlreadyExistExceptionBecauseOfId() throws ObjectAlreadyExistException{
+        Film film1 = new Film("qwerty1",
+                "Description1",
                 LocalDate.of(1999, 10, 10),
                 120);
-        Film film2 = new Film("qwerty",
-                "Description",
+        film1.setId(1);
+
+        Film film2 = new Film("qwerty2",
+                "Description2",
                 LocalDate.of(2000, 11, 11),
                 180);
+        film2.setId(1);
+
         filmController.create(film1);
         Assertions.assertThrows(ObjectAlreadyExistException.class, () -> {
             filmController.create(film2);
