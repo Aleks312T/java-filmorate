@@ -4,9 +4,7 @@ import lombok.Data;
 import lombok.Generated;
 import lombok.NonNull;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
@@ -27,7 +25,8 @@ public class Film {
     protected LocalDate releaseDate;
 
     @NonNull
-    @Size(min = 1, max = 1200)
+    @Min(1)
+    @Max(1200)
     protected Integer duration;                     //Minutes
 
 }
