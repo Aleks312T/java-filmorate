@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.Generated;
 import lombok.NonNull;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;

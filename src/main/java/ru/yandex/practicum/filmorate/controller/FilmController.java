@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.NamelessObjectException;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -57,8 +58,8 @@ public class FilmController {
         if (!films.containsKey(film.getId()) || film.getId() == 0) {
             String errorMessage = "На обновление пришел фильм с неизвестным Id = " + film.getId();
             log.warn(errorMessage);
-            //Не уверен в том, какое исключение нужно выдавать
-            throw new RuntimeException();
+
+            throw new NamelessObjectException();
         } else
         if (validateFilm(film)) {
             log.trace("Фильм {} прошел валидацию", film.getId());

@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.NamelessObjectException;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -53,8 +54,8 @@ public class UserController {
         if (!users.containsKey(user.getId()) || user.getId() == 0) {
             String errorMessage = "На обновление пришел пользователь с неизвестным Id = " + user.getId();
             log.warn(errorMessage);
-            //Не уверен в том, какое исключение нужно выдавать
-            throw new RuntimeException();
+
+            throw new NamelessObjectException();
         } else
         if (validateUser(user)) {
             log.trace("Пользователь {} прошел валидацию", user.getId());
