@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Data
@@ -9,16 +11,19 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class User {
-    int id;
+    @Generated
+    protected int id;
 
     @NonNull
-    String login;
+    protected String login;
 
-    String name;
-
-    @NonNull
-    String email;
+    protected String name;
 
     @NonNull
-    LocalDate birthday;
+    @Email
+    protected String email;
+
+    @NonNull
+    @PastOrPresent
+    protected LocalDate birthday;
 }

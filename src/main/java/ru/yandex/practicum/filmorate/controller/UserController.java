@@ -17,6 +17,7 @@ import java.util.Map;
 public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private Integer id = 0;
 
     @GetMapping
     public Collection<User> findAll() {
@@ -36,7 +37,7 @@ public class UserController {
         if (validateUser(user)) {
             log.trace("Пользователь {} прошел валидацию", user.getId());
             if (user.getId() == 0)
-                user.setId(users.size() + 1);
+                user.setId(++id);
             users.put(user.getId(), user);
         } else {
             String errorMessage = "Пользователь " + user.getId() + " не прошел валидацию";
@@ -57,8 +58,6 @@ public class UserController {
         } else
         if (validateUser(user)) {
             log.trace("Пользователь {} прошел валидацию", user.getId());
-            if (user.getId() == 0)
-                user.setId(users.size());
             //Не выводим ошибку о наличии пользователя из-за метода put
             users.put(user.getId(), user);
         } else {
