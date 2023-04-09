@@ -76,12 +76,10 @@ public class UserController {
         if (user.getName().isBlank())
             user.setName(user.getLogin());
 
-        //isBlank, чтобы отсеять пробелы
-        if (user.getEmail().isBlank() || !user.getEmail().contains("@"))
-            return false;
-        if (user.getLogin().isEmpty() || user.getLogin().contains(" "))
-            return false;
-        return !user.getBirthday().isAfter(LocalDate.now());
-
+        return (!user.getEmail().isBlank())
+                && (user.getEmail().contains("@"))
+                && (!user.getLogin().isEmpty())
+                && (!user.getLogin().contains(" "))
+                && (user.getBirthday().isBefore(LocalDate.now()));
     }
 }

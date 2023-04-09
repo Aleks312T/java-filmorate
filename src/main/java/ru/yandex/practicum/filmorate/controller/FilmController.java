@@ -76,20 +76,11 @@ public class FilmController {
         return film;
     }
 
-    @Validated
     private boolean validateFilm(@Valid Film film) {
-        if (film.getName().isBlank())
-            return false;
-        if (film.getDescription().length() > 200)
-            return false;
-        //День рождение кино
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)))
-            return false;
-        if (film.getReleaseDate().isAfter(LocalDate.now()))
-            return false;
-        if (film.getDuration() <= 0)
-            return false;
-
-        return true;
+        return (!film.getName().isBlank())
+                && (film.getDescription().length() <= 200)
+                && (film.getReleaseDate().isAfter(LocalDate.of(1895, 12, 28)))
+                && (film.getReleaseDate().isBefore(LocalDate.now()))
+                && (film.getDuration() > 0);
     }
 }
