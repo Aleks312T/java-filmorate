@@ -21,7 +21,7 @@ public class FilmController {
     private final Map<Integer, Film> films = new HashMap<>();
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private Integer id = 0;
-
+    //Проверка git
     @GetMapping
     public Collection<Film> findAll() {
         log.info("Получен запрос Get /films.");
