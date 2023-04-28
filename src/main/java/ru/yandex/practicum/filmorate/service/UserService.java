@@ -2,66 +2,96 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NamelessObjectException;
-import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.InputMismatchException;
+import java.util.Set;
 
 @Service
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private final Map<Integer, User> users = new HashMap<>();
+    private final UserStorage userStorage;
 
-    private Integer id = 0;
+    @Autowired
+    public UserService(UserStorage userStorage)
+    {
+        this.userStorage = userStorage;
+    }
+
     public Collection<User> findAll() {
-        log.debug("Текущее количество пользователей: {}", users.size());
-        return users.values();
+        return userStorage.findAll();
     }
 
     public User create(User user) {
-        if (users.containsKey(user.getId())) {
-            String errorMessage = "Пользователь с Id " + user.getId() + " уже существует.";
-            log.warn(errorMessage);
-            throw new ObjectAlreadyExistException();
-        } else
-        if (validateUser(user)) {
-            log.trace("Пользователь {} прошел валидацию", user.getId());
-            if (user.getId() == 0)
-                user.setId(++id);
-            users.put(user.getId(), user);
-        } else {
-            String errorMessage = "Пользователь " + user.getId() + " не прошел валидацию";
-            log.warn(errorMessage);
-            throw new ValidationException();
-        }
-        return user;
+        return userStorage.create(user);
     }
 
     public User put(User user) {
-        if (!users.containsKey(user.getId()) || user.getId() == 0) {
-            String errorMessage = "На обновление пришел пользователь с неизвестным Id = " + user.getId();
-            log.warn(errorMessage);
-
-            throw new NamelessObjectException();
-        } else
-        if (validateUser(user)) {
-            log.trace("Пользователь {} прошел валидацию", user.getId());
-            //Не выводим ошибку о наличии пользователя из-за метода put
-            users.put(user.getId(), user);
-        } else {
-            String errorMessage = "Пользователь " + user.getId() + " не прошел валидацию";
-            log.warn(errorMessage);
-            throw new ValidationException();
-        }
-        return user;
+        return userStorage.put(user);
     }
 
+    //Возможно решение стоит добавить в InMemoryUserStorage
+    public User addFriend(int userId, int friendId) {
+        if(userId == friendId) {
+            String errorMessage = "Нельзя добавить в друзья самого себя";
+            log.warn(errorMessage);
+            throw new InputMismatchException();
+        } else
+        if(!userStorage.containUserId(userId)) {
+            String errorMessage = "Пользователь " + userId + " не найден";
+            log.warn(errorMessage);
+            throw new NamelessObjectException();
+        } else
+        if(!userStorage.containUserId(friendId)) {
+            String errorMessage = "Пользователь " + friendId + " не найден";
+            log.warn(errorMessage);
+            throw new NamelessObjectException();
+        } else {
+            //Добавить друга пользователю
+            User user = userStorage.findAll().stream()
+                    .filter(currentUser -> currentUser.getId().equals(userId))
+                    .findFirst().get();
+            user.getFriends().add(friendId);
+            //Добавить друга другу
+            User friend = userStorage.findAll().stream()
+                    .filter(currentFriend -> currentFriend.getId().equals(userId))
+                    .findFirst().get();
+            friend.getFriends().add(userId);
+            return user;
+        }
+    }
+
+    public User deleteFriend(int userId, int friendId) {
+
+        return null;
+    }
+
+    public Collection<User> getFriends(int userId) {
+        if(!userStorage.containUserId(userId)) {
+            String errorMessage = "Пользователь " + userId + " не найден";
+            log.warn(errorMessage);
+            throw new NamelessObjectException();
+        } else {
+            Set<User> result = new HashSet<>();
+            Set<Integer> friends = new HashSet<>();
+
+            User user = userStorage.getUserById(userId);
+            friends = user.getFriends();
+
+            for(Integer friendId : friends)
+                result.add(userStorage.getUserById(friendId));
+
+            return result;
+        }
+    }
     private boolean validateUser(User user) {
         //Проверка nonNull аргумента
         if (user.getName() == null)

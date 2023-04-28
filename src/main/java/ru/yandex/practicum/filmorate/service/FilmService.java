@@ -33,7 +33,7 @@ public class FilmService {
         } else
         if (validateFilm(film)) {
             log.trace("Фильм {} прошел валидацию", film.getId());
-            if (film.getId() == 0)
+            if (film.getId() ==  null || film.getId() == 0)
                 film.setId(++id);
             films.put(film.getId(), film);
         } else {

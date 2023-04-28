@@ -9,8 +9,7 @@ import java.time.LocalDate;
 
 @Data
 public class Film {
-    @Generated
-    protected int id;
+    protected Integer id;
 
     @NotBlank
     @NonNull
