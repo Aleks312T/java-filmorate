@@ -37,4 +37,32 @@ public class UserController {
         log.info("Получен запрос Put /users.");
         return userService.put(user);
     }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addFriend(@Valid @RequestBody
+                          @PathVariable("id") int userId,
+                          @PathVariable("friendId") int friendId) {
+        log.info("Получен запрос Put /{}/friends/{}.", userId, friendId);
+        return userService.addFriend(userId, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public User deleteFriend(@Valid @RequestBody
+                             @PathVariable("id") int userId,
+                             @PathVariable("friendId") int friendId) {
+        log.info("Получен запрос Delete /{}/friends/{}.", userId, friendId);
+        return userService.deleteFriend(userId, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public Collection<User> getFriends(@Valid @RequestBody @PathVariable("id") int userId) {
+        log.info("Получен запрос Get /{}/friends.", userId);
+        return userService.getFriends(userId);
+    }
+
+    @GetMapping("/{id}")
+    public User getUser(@Valid @RequestBody @PathVariable("id") int userId) {
+        log.info("Получен запрос Get /{}.", userId);
+        return userService.getUser(userId);
+    }
 }

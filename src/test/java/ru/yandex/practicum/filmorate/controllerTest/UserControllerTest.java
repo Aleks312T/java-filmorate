@@ -12,9 +12,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -76,6 +74,92 @@ class UserControllerTest {
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.put(user2));
+    }
+
+    @Test
+    void shouldAddToFriendsOK() {
+        User user1 = new User("login1",
+                "qwerty@mail.ru",
+                LocalDate.of(2001, 11, 11));
+        user1.setId(1);
+        User user2 = new User("login2",
+                "qwerty@mail.ru",
+                LocalDate.of(2002, 12, 12));
+        user2.setId(2);
+
+        assertEquals(user1, userController.create(user1));
+        assertEquals(user2, userController.create(user2));
+
+        //Проверка, что пользователи еще не в друзьях
+        assertEquals(new HashSet<>(), userController.getUser(1).getFriends());
+        assertEquals(new HashSet<>(), userController.getUser(2).getFriends());
+
+        //Добавим друзей
+        userController.addFriend(1, 2);
+        Set<Integer> result1 = new HashSet<>();
+        result1.add(2);
+        Set<Integer> result2 = new HashSet<>();
+        result2.add(1);
+
+        //Проверяем
+        assertEquals(result1, userController.getUser(1).getFriends());
+        assertEquals(result2, userController.getUser(2).getFriends());
+    }
+
+    @Test
+    void shouldAddAndRemoveToFriendsOK() {
+        User user1 = new User("login1",
+                "qwerty1@mail.ru",
+                LocalDate.of(2001, 10, 10));
+        user1.setId(1);
+        User user2 = new User("login2",
+                "qwerty2@mail.ru",
+                LocalDate.of(2002, 10, 10));
+        user2.setId(2);
+        User user3 = new User("login3",
+                "qwerty3@mail.ru",
+                LocalDate.of(2003, 10, 10));
+        user3.setId(3);
+
+        assertEquals(user1, userController.create(user1));
+        assertEquals(user2, userController.create(user2));
+        assertEquals(user3, userController.create(user3));
+
+        //Проверка, что пользователи еще не в друзьях
+        assertEquals(new HashSet<>(), userController.getUser(1).getFriends());
+        assertEquals(new HashSet<>(), userController.getUser(2).getFriends());
+        assertEquals(new HashSet<>(), userController.getUser(3).getFriends());
+
+        //Добавим друзей
+        userController.addFriend(1, 2);
+        userController.addFriend(2, 3);
+        Set<Integer> result1 = new HashSet<>();
+        result1.add(2);
+        Set<Integer> result2 = new HashSet<>();
+        result2.add(1);
+        result2.add(3);
+        Set<Integer> result3 = new HashSet<>();
+        result3.add(2);
+
+        //Проверяем
+        assertEquals(result1, userController.getUser(1).getFriends());
+        assertEquals(result2, userController.getUser(2).getFriends());
+        assertEquals(result3, userController.getUser(3).getFriends());
+
+        //Удалим из друзей 1 и 2 пользователей
+        userController.deleteFriend(1, 2);
+        //У первого теперь нет друзей
+        result1.clear();
+        //Пользователи 2 и 3 все еще в друзьях
+        result2.clear();
+        result2.add(3);
+        //У третьего ничего не изменилось
+
+
+        //Проверяем
+        assertEquals(result1, userController.getUser(1).getFriends());
+        assertEquals(result2, userController.getUser(2).getFriends());
+        assertEquals(result3, userController.getUser(3).getFriends());
     }
 
     @Test
@@ -141,7 +225,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldNotPutUnknownUser() {
+    void shouldNotPutUnknownUser() throws RuntimeException {
         User user = new User("login",
                 "qwerty@mail.ru",
                 LocalDate.of(1999, 10, 10));
