@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.NamelessObjectException;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -48,12 +49,8 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (!films.containsKey(film.getId()) || film.getId() == 0) {
             String errorMessage = "На обновление пришел фильм с неизвестным Id = " + film.getId();
             log.warn(errorMessage);
-
             throw new NamelessObjectException();
         } else
-            //Как без вызова такой функции пробрасывать нужные исключения с корректными сообщениями?
-            //Я +- понял как работает Valid и все вокруг него, но он видимо просто не допускает переменную, из-за
-            //чего не дает анализировать неверные входные данные, выкидывать кастомные исключения и т.д.
             if (validateFilm(film)) {
                 log.trace("Фильм {} прошел валидацию", film.getId());
                 //Не выводим ошибку о наличии фильма из-за метода put
@@ -64,6 +61,24 @@ public class InMemoryFilmStorage implements FilmStorage {
                 throw new ValidationException();
             }
         return film;
+    }
+
+    public boolean containFilm(Film film) {
+        log.debug("Вызов функции {} с входными данными {}.",
+                "containFilm", film.getId());
+        return films.containsValue(film);
+    }
+
+    public boolean containFilmId(int id) {
+        log.debug("Вызов функции {} с входными данными {}.",
+                "containFilmId", id);
+        return films.containsKey(id);
+    }
+
+    public Film getFilmById(int id) {
+        log.debug("Вызов функции {} с входными данными {}.",
+                "getFilmById", id);
+        return films.getOrDefault(id, null);
     }
 
     private boolean validateFilm(@Valid Film film) {

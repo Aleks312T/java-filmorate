@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.yandex.practicum.filmorate.exception.NamelessObjectException;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
@@ -21,6 +22,12 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)                 //400
     public ErrorResponse handleObjectAlreadyExistException(final ObjectAlreadyExistException e) {
         return new ErrorResponse("Объект уже существует.", e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)                 //400
+    public ErrorResponse handleObjectDoesntExistException(final ObjectDoesntExistException e) {
+        return new ErrorResponse("Объекта не существует.", e.getMessage());
     }
 
     @ExceptionHandler

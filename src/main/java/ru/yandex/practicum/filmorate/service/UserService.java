@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NamelessObjectException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.InputMismatchException;
@@ -37,11 +37,19 @@ public class UserService {
         return userStorage.put(user);
     }
 
+
     public User getUser(int userId) {
-        return userStorage.getUserById(userId);
+        User result = userStorage.getUserById(userId);
+        if(result == null) {
+            String errorMessage = "Пользователя с Id " + userId + " нет.";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException();
+        } else
+            return result;
     }
 
     //Возможно решение стоит добавить в InMemoryUserStorage
+    //TODO: проверить логирование везде, где есть друзья
     public User addFriend(int userId, int friendId) {
         if(userId == friendId) {
             String errorMessage = "Нельзя добавить в друзья самого себя";

@@ -11,4 +11,5 @@ public interface FilmStorage {
 
     public Film put(Film film);
 
+    Film getFilmById(int filmId);
 }

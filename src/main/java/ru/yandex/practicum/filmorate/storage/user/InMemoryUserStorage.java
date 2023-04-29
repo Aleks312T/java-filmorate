@@ -47,7 +47,6 @@ public class InMemoryUserStorage implements UserStorage {
         if (!users.containsKey(user.getId()) || user.getId() == 0) {
             String errorMessage = "На обновление пришел пользователь с неизвестным Id = " + user.getId();
             log.warn(errorMessage);
-
             throw new NamelessObjectException();
         } else
         if (validateUser(user)) {
