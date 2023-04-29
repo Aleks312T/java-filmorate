@@ -12,26 +12,26 @@ import ru.yandex.practicum.filmorate.model.ErrorResponse;
 @ControllerAdvice
 public class ErrorHandler {
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.NOT_FOUND)                   //404
     public ErrorResponse handleNamelessObjectException(final NamelessObjectException e) {
-        return new ErrorResponse("Пришел безымянный объект." + e.getMessage());
+        return new ErrorResponse("Пришел безымянный объект.", e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)                 //400
     public ErrorResponse handleObjectAlreadyExistException(final ObjectAlreadyExistException e) {
-        return new ErrorResponse("Объект уже существует." + e.getMessage());
+        return new ErrorResponse("Объект уже существует.", e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)                 //400
     public ErrorResponse handleValidationException(final ValidationException e) {
-        return new ErrorResponse("Объект не прошел проверку." + e.getMessage());
+        return new ErrorResponse("Объект не прошел проверку.", e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)       //500
     public ErrorResponse handleUnknownException(final Throwable e) {
-        return new ErrorResponse("Произошла непредвиденная ошибка.");
+        return new ErrorResponse("Произошла непредвиденная ошибка.", e.getMessage());
     }
 }

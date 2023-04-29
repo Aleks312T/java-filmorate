@@ -155,11 +155,36 @@ class UserControllerTest {
         result2.add(3);
         //У третьего ничего не изменилось
 
-
         //Проверяем
         assertEquals(result1, userController.getUser(1).getFriends());
         assertEquals(result2, userController.getUser(2).getFriends());
         assertEquals(result3, userController.getUser(3).getFriends());
+    }
+
+    @Test
+    void shouldGetFriendsOK() {
+        User user1 = new User("login1",
+                "qwerty@mail.ru",
+                LocalDate.of(2001, 11, 11));
+        user1.setId(1);
+        User user2 = new User("login2",
+                "qwerty@mail.ru",
+                LocalDate.of(2002, 12, 12));
+        user2.setId(2);
+
+        assertEquals(user1, userController.create(user1));
+        assertEquals(user2, userController.create(user2));
+
+        //Добавим друзей
+        userController.addFriend(1, 2);
+        Set<User> result1 = new HashSet<>();
+        result1.add(user2);
+        Set<User> result2 = new HashSet<>();
+        result2.add(user1);
+
+        //Проверяем
+        assertEquals(result1, userController.getFriends(1));
+        assertEquals(result2, userController.getFriends(2));
     }
 
     @Test
