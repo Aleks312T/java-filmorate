@@ -155,7 +155,7 @@ public class UserService {
             User user = userStorage.getUserById(userId);
             friends = user.getFriends();
 
-            for(Integer friendId : friends)
+            for (Integer friendId : friends)
                 result.add(userStorage.getUserById(friendId));
 
             return result;
