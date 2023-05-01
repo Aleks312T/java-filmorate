@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NamelessObjectException;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -134,10 +133,7 @@ public class UserService {
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
         } else {
-            Set<User> result = new HashSet<>();
-
-            User user1 = userStorage.getUserById(firstUserId);
-            User user2 = userStorage.getUserById(secondUserId);
+            Set<User> result;
 
             //Надо использовать именно локальный getFriends(firstUserId) а не user1.getFriends()
             result = getFriends(firstUserId).stream()
