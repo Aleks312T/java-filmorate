@@ -162,6 +162,85 @@ class FilmControllerTest {
     }
 
     @Test
+    void shouldGetPopularFilmOK() {
+        Film film1 = new Film("qwerty1",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film1.setId(1);
+        Film film2 = new Film("qwerty2",
+                "Description",
+                LocalDate.of(2000, 11, 11),
+                180);
+        film2.setId(2);
+        Film film3 = new Film("qwerty3",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film3.setId(3);
+        Film film4 = new Film("qwerty4",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film4.setId(4);
+        Film film5 = new Film("qwerty5",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film5.setId(5);
+
+        assertEquals(film1, filmController.create(film1));
+        assertEquals(film2, filmController.create(film2));
+        assertEquals(film3, filmController.create(film3));
+        assertEquals(film4, filmController.create(film4));
+        assertEquals(film5, filmController.create(film5));
+
+        HashSet<Film> result1 = new HashSet<>();
+        result1.add(film1);
+        result1.add(film2);
+        assertEquals(result1, filmController.getPopularFilm(2));
+        result1.add(film3);
+        result1.add(film4);
+        assertEquals(result1, filmController.getPopularFilm(4));
+
+
+        filmController.addLike(1, 1);
+        filmController.addLike(1, 2);
+        filmController.addLike(1, 3);
+
+        filmController.addLike(2, 2);
+
+        filmController.addLike(3, 1);
+        filmController.addLike(3, 2);
+        filmController.addLike(3, 3);
+
+        filmController.addLike(4, 1);
+        filmController.addLike(4, 2);
+
+        HashSet<Film> result2 = new HashSet<>();
+
+        result2.add(film1);
+        assertEquals(result2, filmController.getPopularFilm(1));
+
+        result2.add(film3);
+        assertEquals(result2, filmController.getPopularFilm(2));
+
+        result2.add(film4);
+        assertEquals(result2, filmController.getPopularFilm(3));
+
+        result2.add(film2);
+        assertEquals(result2, filmController.getPopularFilm(4));
+
+        result2.add(film5);
+        assertEquals(result2, filmController.getPopularFilm(5));
+
+        assertEquals(result2, filmController.getPopularFilm(6));
+        assertEquals(result2, filmController.getPopularFilm(7));
+        //Жаль, что нельзя в тесте проверить без входного параметра
+        assertEquals(result2, filmController.getPopularFilm(15));
+    }
+
+    @Test
     void shouldNotAddLikesFromUnknownUser() {
         Film film1 = new Film("qwerty1",
                 "Description",

@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
@@ -96,6 +97,13 @@ public class FilmService {
         }
     }
 
+    public Collection<Film> getPopularFilm(int count) {
+        return filmStorage.findAll().stream()
+                .sorted((o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size()))
+                .limit(count)
+                .collect(Collectors.toSet());
+    }
+
     public Collection<Integer> returnLikes(int filmId) {
         if(!filmStorage.containFilmId(filmId)) {
             String errorMessage = "Фильма с Id " + filmId + " нет.";
@@ -107,4 +115,5 @@ public class FilmService {
             return film.getLikes();
         }
     }
+
 }

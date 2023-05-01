@@ -62,5 +62,17 @@ public class FilmController {
         return filmService.returnLikes(filmId);
     }
 
-    //TODO сделать остальные функции
+    @GetMapping("/popular")
+    public Collection<Film> getPopularFilm(@Valid @RequestBody @RequestParam(defaultValue = "10", required = false)
+                                               Integer count) {
+        log.info("Получен запрос DeleteMapping /popular с параметром count = {} .", count);
+        return filmService.getPopularFilm(count);
+    }
+
+    @GetMapping("/{id}")
+    public Film getFilm(@Valid @RequestBody @PathVariable("id") int filmId) {
+        log.info("Получен запрос DeleteMapping /{}.", filmId);
+        return filmService.getFilm(filmId);
+    }
+
 }
