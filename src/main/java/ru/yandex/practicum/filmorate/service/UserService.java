@@ -38,7 +38,7 @@ public class UserService {
 
     public User getUser(int userId) {
         User result = userStorage.getUserById(userId);
-        if(result == null) {
+        if (result == null) {
             String errorMessage = "Пользователя с Id " + userId + " нет.";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
@@ -48,17 +48,17 @@ public class UserService {
 
     //Возможно решение стоит добавить в InMemoryUserStorage
     public User addFriend(int userId, int friendId) {
-        if(userId == friendId) {
+        if (userId == friendId) {
             String errorMessage = "Нельзя добавить в друзья самого себя";
             log.warn(errorMessage);
             throw new InputMismatchException();
         } else
-        if(!userStorage.containUserId(userId)) {
+        if (!userStorage.containUserId(userId)) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
         } else
-        if(!userStorage.containUserId(friendId)) {
+        if (!userStorage.containUserId(friendId)) {
             String errorMessage = "Пользователь " + friendId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
@@ -78,17 +78,17 @@ public class UserService {
     }
 
     public User deleteFriend(int userId, int friendId) {
-        if(userId == friendId) {
+        if (userId == friendId) {
             String errorMessage = "Нельзя добавить в друзья самого себя";
             log.warn(errorMessage);
             throw new InputMismatchException();
         } else
-        if(!userStorage.containUserId(userId)) {
+        if (!userStorage.containUserId(userId)) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
         } else
-        if(!userStorage.containUserId(friendId)) {
+        if (!userStorage.containUserId(friendId)) {
             String errorMessage = "Пользователь " + friendId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
@@ -97,7 +97,7 @@ public class UserService {
             User user = userStorage.findAll().stream()
                     .filter(currentUser -> currentUser.getId().equals(userId))
                     .findFirst().get();
-            if(user.getFriends().contains(friendId))
+            if (user.getFriends().contains(friendId))
                 user.getFriends().remove(friendId);
             else {
                 String errorMessage = "Пользователь " + userId + " не является другом " + friendId;
@@ -109,7 +109,7 @@ public class UserService {
             User friend = userStorage.findAll().stream()
                     .filter(currentFriend -> currentFriend.getId().equals(friendId))
                     .findFirst().get();
-            if(friend.getFriends().contains(userId))
+            if (friend.getFriends().contains(userId))
                 friend.getFriends().remove(userId);
             else {
                 String errorMessage = "Пользователь " + friendId + " не является другом " + userId;
@@ -122,12 +122,12 @@ public class UserService {
     }
 
     public Collection<User> getCommonFriends(int firstUserId, int secondUserId) {
-        if(!userStorage.containUserId(firstUserId)) {
+        if (!userStorage.containUserId(firstUserId)) {
             String errorMessage = "Пользователь " + firstUserId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
         } else
-        if(!userStorage.containUserId(secondUserId)) {
+        if (!userStorage.containUserId(secondUserId)) {
             String errorMessage = "Пользователь " + secondUserId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
@@ -144,7 +144,7 @@ public class UserService {
     }
 
     public Collection<User> getFriends(int userId) {
-        if(!userStorage.containUserId(userId)) {
+        if (!userStorage.containUserId(userId)) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
