@@ -15,6 +15,7 @@ import java.util.Collection;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;

@@ -36,7 +36,6 @@ public class UserService {
         return userStorage.put(user);
     }
 
-
     public User getUser(int userId) {
         User result = userStorage.getUserById(userId);
         if(result == null) {

@@ -206,7 +206,6 @@ class UserControllerTest {
                 LocalDate.of(2004, 12, 14));
         user4.setId(4);
 
-
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
         assertEquals(user3, userController.create(user3));
@@ -255,7 +254,6 @@ class UserControllerTest {
                 "qwerty@mail.ru",
                 LocalDate.of(2004, 12, 14));
         user4.setId(4);
-
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
