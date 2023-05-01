@@ -238,6 +238,49 @@ class UserControllerTest {
     }
 
     @Test
+    void shouldGetCommonFriendsAfterDeleteOK() {
+        User user1 = new User("login1",
+                "qwerty@mail.ru",
+                LocalDate.of(2001, 11, 11));
+        user1.setId(1);
+        User user2 = new User("login2",
+                "qwerty@mail.ru",
+                LocalDate.of(2002, 12, 12));
+        user2.setId(2);
+        User user3 = new User("login3",
+                "qwerty@mail.ru",
+                LocalDate.of(2003, 12, 13));
+        user3.setId(3);
+        User user4 = new User("login4",
+                "qwerty@mail.ru",
+                LocalDate.of(2004, 12, 14));
+        user4.setId(4);
+
+
+        assertEquals(user1, userController.create(user1));
+        assertEquals(user2, userController.create(user2));
+        assertEquals(user3, userController.create(user3));
+        assertEquals(user4, userController.create(user4));
+
+        //Добавим друзей
+        userController.addFriend(1, 2);
+        userController.addFriend(1, 3);
+        userController.addFriend(2, 4);
+        userController.addFriend(3, 4);
+
+        Set<User> result1 = new HashSet<>();
+        result1.add(user2);
+        result1.add(user3);
+        Set<User> result2 = new HashSet<>();
+        result2.add(user3);
+
+        //Проверяем
+        assertEquals(result1, userController.getCommonFriends(1, 4));
+        userController.deleteFriend(1, 2);
+        assertEquals(result2, userController.getCommonFriends(1, 4));
+    }
+
+    @Test
     void shouldGetUsersOK() {
         User user1 = new User("login1",
                 "qwerty1@mail.ru",
