@@ -66,5 +66,10 @@ public class UserController {
         return userService.getUser(userId);
     }
 
-    //TODO сделать остальные функции
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Collection<User> getCommonFriends(@Valid @RequestBody @PathVariable("id") int userId,
+                                          @PathVariable("otherId") int otherId) {
+        log.info("Получен запрос Delete /{}/friends/common/{}.", userId, otherId);
+        return userService.getCommonFriends(userId, otherId);
+    }
 }

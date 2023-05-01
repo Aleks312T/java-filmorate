@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -57,12 +58,12 @@ public class UserService {
         if(!userStorage.containUserId(userId)) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
-            throw new NamelessObjectException();
+            throw new ObjectDoesntExistException();
         } else
         if(!userStorage.containUserId(friendId)) {
             String errorMessage = "Пользователь " + friendId + " не найден";
             log.warn(errorMessage);
-            throw new NamelessObjectException();
+            throw new ObjectDoesntExistException();
         } else {
             //Добавить друга пользователю
             User user = userStorage.findAll().stream()
@@ -87,12 +88,12 @@ public class UserService {
         if(!userStorage.containUserId(userId)) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
-            throw new NamelessObjectException();
+            throw new ObjectDoesntExistException();
         } else
         if(!userStorage.containUserId(friendId)) {
             String errorMessage = "Пользователь " + friendId + " не найден";
             log.warn(errorMessage);
-            throw new NamelessObjectException();
+            throw new ObjectDoesntExistException();
         } else {
             //Удалить друга у пользователя
             User user = userStorage.findAll().stream()
@@ -103,7 +104,7 @@ public class UserService {
             else {
                 String errorMessage = "Пользователь " + userId + " не является другом " + friendId;
                 log.warn(errorMessage);
-                throw new NamelessObjectException();
+                throw new InputMismatchException();
             }
 
             //Добавить друга у друга
@@ -115,10 +116,35 @@ public class UserService {
             else {
                 String errorMessage = "Пользователь " + friendId + " не является другом " + userId;
                 log.warn(errorMessage);
-                throw new NamelessObjectException();
+                throw new InputMismatchException();
             }
 
             return user;
+        }
+    }
+
+    public Collection<User> getCommonFriends(int firstUserId, int secondUserId) {
+        if(!userStorage.containUserId(firstUserId)) {
+            String errorMessage = "Пользователь " + firstUserId + " не найден";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException();
+        } else
+        if(!userStorage.containUserId(secondUserId)) {
+            String errorMessage = "Пользователь " + secondUserId + " не найден";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException();
+        } else {
+            Set<User> result = new HashSet<>();
+
+            User user1 = userStorage.getUserById(firstUserId);
+            User user2 = userStorage.getUserById(secondUserId);
+
+            //Надо использовать именно локальный getFriends(firstUserId) а не user1.getFriends()
+            result = getFriends(firstUserId).stream()
+                    .filter(getFriends(secondUserId)::contains)
+                    .collect(Collectors.toSet());
+
+            return result;
         }
     }
 
@@ -126,7 +152,7 @@ public class UserService {
         if(!userStorage.containUserId(userId)) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
-            throw new NamelessObjectException();
+            throw new ObjectDoesntExistException();
         } else {
             Set<User> result = new HashSet<>();
             Set<Integer> friends;
