@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NamelessObjectException;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -49,7 +48,6 @@ public class UserService {
     }
 
     //Возможно решение стоит добавить в InMemoryUserStorage
-    //TODO: проверить логирование везде, где есть друзья
     public User addFriend(int userId, int friendId) {
         if(userId == friendId) {
             String errorMessage = "Нельзя добавить в друзья самого себя";
@@ -131,7 +129,7 @@ public class UserService {
             throw new NamelessObjectException();
         } else {
             Set<User> result = new HashSet<>();
-            Set<Integer> friends = new HashSet<>();
+            Set<Integer> friends;
 
             User user = userStorage.getUserById(userId);
             friends = user.getFriends();

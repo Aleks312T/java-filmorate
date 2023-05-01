@@ -65,4 +65,6 @@ public class UserController {
         log.info("Получен запрос Get /{}.", userId);
         return userService.getUser(userId);
     }
+
+    //TODO сделать остальные функции
 }
