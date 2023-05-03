@@ -53,12 +53,12 @@ public class UserService {
             log.warn(errorMessage);
             throw new InputMismatchException();
         } else
-        if (!userStorage.containUserId(userId)) {
+        if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
         } else
-        if (!userStorage.containUserId(friendId)) {
+        if (userStorage.getUserById(friendId) == null) {
             String errorMessage = "Пользователь " + friendId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
@@ -83,12 +83,12 @@ public class UserService {
             log.warn(errorMessage);
             throw new InputMismatchException();
         } else
-        if (!userStorage.containUserId(userId)) {
+        if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
         } else
-        if (!userStorage.containUserId(friendId)) {
+        if (userStorage.getUserById(friendId) == null) {
             String errorMessage = "Пользователь " + friendId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
@@ -122,12 +122,12 @@ public class UserService {
     }
 
     public Collection<User> getCommonFriends(int firstUserId, int secondUserId) {
-        if (!userStorage.containUserId(firstUserId)) {
+        if (userStorage.getUserById(firstUserId) == null) {
             String errorMessage = "Пользователь " + firstUserId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
         } else
-        if (!userStorage.containUserId(secondUserId)) {
+        if (userStorage.getUserById(secondUserId) == null) {
             String errorMessage = "Пользователь " + secondUserId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
@@ -144,7 +144,7 @@ public class UserService {
     }
 
     public Collection<User> getFriends(int userId) {
-        if (!userStorage.containUserId(userId)) {
+        if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();

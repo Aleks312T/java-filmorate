@@ -48,12 +48,12 @@ public class FilmService {
     }
 
     public Film addLike(int filmId, int userId) {
-        if (!filmStorage.containFilmId(filmId)) {
+        if (filmStorage.getFilmById(filmId) == null) {
             String errorMessage = "Фильма с Id " + filmId + " нет.";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
         } else
-        if (!userStorage.containUserId(userId)) {
+        if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователя с Id " + userId + " нет.";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
@@ -73,12 +73,12 @@ public class FilmService {
     }
 
     public Film removeLike(int filmId, int userId) {
-        if (!filmStorage.containFilmId(filmId)) {
+        if (filmStorage.getFilmById(filmId) == null) {
             String errorMessage = "Фильма с Id " + filmId + " нет.";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
         } else
-        if (!userStorage.containUserId(userId)) {
+        if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователя с Id " + userId + " нет.";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException();
@@ -105,15 +105,14 @@ public class FilmService {
     }
 
     public Collection<Integer> returnLikes(int filmId) {
-        if (!filmStorage.containFilmId(filmId)) {
+        if (filmStorage.getFilmById(filmId) == null) {
             String errorMessage = "Фильма с Id " + filmId + " нет.";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else {
             Film film = filmStorage.getFilmById(filmId);
 
             return film.getLikes();
         }
     }
-
 }

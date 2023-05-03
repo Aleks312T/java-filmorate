@@ -11,9 +11,7 @@ public interface UserStorage {
 
     User put(User user);
 
-    public boolean containUser(User user);
+    boolean containUser(User user);
 
-    public boolean containUserId(int id);
-
-    public User getUserById(int id);
+    User getUserById(int id);
 }

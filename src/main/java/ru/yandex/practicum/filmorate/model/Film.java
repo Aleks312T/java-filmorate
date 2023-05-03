@@ -14,6 +14,8 @@ public class Film {
     protected Integer id;
 
     @NotBlank
+    @NonNull
+    //Оставил NonNull, чтобы name требовался в конструкторе
     protected String name;
 
     @NonNull
