@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -12,16 +13,13 @@ import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
+@RequiredArgsConstructor
+@Validated
 @RequestMapping("/films")
 public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
-
+    @NonNull
     private final FilmService filmService;
-
-    @Autowired
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
-    }
 
     @GetMapping
     public Collection<Film> findAll() {
@@ -63,7 +61,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<Film> getPopularFilm(@Valid @RequestBody @RequestParam(defaultValue = "10", required = false)
+    public Collection<Film> getPopularFilm(@Valid @RequestBody @RequestParam(defaultValue = "10")
                                                Integer count) {
         log.info("Получен запрос DeleteMapping /popular с параметром count = {} .", count);
         return filmService.getPopularFilm(count);

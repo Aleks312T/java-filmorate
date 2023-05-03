@@ -14,7 +14,6 @@ public class Film {
     protected Integer id;
 
     @NotBlank
-    @NonNull
     protected String name;
 
     @NonNull
