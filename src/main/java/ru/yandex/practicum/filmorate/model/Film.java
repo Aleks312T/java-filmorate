@@ -1,19 +1,21 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
-import lombok.Generated;
 import lombok.NonNull;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Film {
-    @Generated
-    protected int id;
+    Set<Integer> likes = new HashSet<>();
+    protected Integer id;
 
     @NotBlank
     @NonNull
+    //Оставил NonNull, чтобы name требовался в конструкторе
     protected String name;
 
     @NonNull
@@ -29,4 +31,7 @@ public class Film {
     @Max(1200)
     protected Integer duration;                     //Minutes
 
+    public Set<Integer> getLikes() {
+        return likes;
+    }
 }

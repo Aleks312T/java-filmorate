@@ -6,12 +6,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,10 +26,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 class FilmControllerTest {
     static FilmController filmController;
+    static FilmService customFilmService;
 
     @BeforeEach
     void beforeEach() {
-        filmController = new FilmController();
+        customFilmService = new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage());
+        User user1 = new User("login1",
+                "qwerty1@mail.ru",
+                LocalDate.of(2001, 10, 10));
+        user1.setId(1);
+        User user2 = new User("login2",
+                "qwerty2@mail.ru",
+                LocalDate.of(2002, 10, 10));
+        user2.setId(2);
+        User user3 = new User("login3",
+                "qwerty3@mail.ru",
+                LocalDate.of(2003, 10, 10));
+        user3.setId(3);
+        customFilmService.userStorage.create(user1);
+        customFilmService.userStorage.create(user2);
+        customFilmService.userStorage.create(user3);
+        filmController = new FilmController(customFilmService);
     }
 
     @Test
@@ -71,6 +94,211 @@ class FilmControllerTest {
             assertTrue(films.containsKey(currentId));
             assertEquals(films.get(currentId), currentFilm);
         }
+    }
+
+    @Test
+    void shouldAddLikesOK() {
+        Film film1 = new Film("qwerty1",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film1.setId(1);
+        Film film2 = new Film("qwerty2",
+                "Description",
+                LocalDate.of(2000, 11, 11),
+                180);
+        film2.setId(2);
+        assertEquals(film1, filmController.create(film1));
+        assertEquals(film2, filmController.create(film2));
+
+        filmController.addLike(1, 1);
+        filmController.addLike(1, 2);
+        filmController.addLike(1, 3);
+
+        filmController.addLike(2, 1);
+        filmController.addLike(2, 3);
+
+        HashSet<Integer> result1 = new HashSet<>();
+        result1.add(1);
+        result1.add(2);
+        result1.add(3);
+        HashSet<Integer> result2 = new HashSet<>();
+        result2.add(1);
+        result2.add(3);
+
+        assertEquals(result1, filmController.getLikes(1));
+        assertEquals(result2, filmController.getLikes(2));
+    }
+
+    @Test
+    void shouldAddAndRemoveLikesOK() {
+        Film film1 = new Film("qwerty1",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film1.setId(1);
+        assertEquals(film1, filmController.create(film1));
+
+        filmController.addLike(1, 1);
+        filmController.addLike(1, 2);
+        filmController.addLike(1, 3);
+
+        HashSet<Integer> result1 = new HashSet<>();
+        result1.add(1);
+        result1.add(2);
+        result1.add(3);
+        assertEquals(result1, filmController.getLikes(1));
+
+        HashSet<Integer> result2 = new HashSet<>();
+        result2.add(1);
+        result2.add(3);
+        filmController.deleteLike(1, 2);
+        assertEquals(result2, filmController.getLikes(1));
+
+        filmController.deleteLike(1, 1);
+        filmController.deleteLike(1, 3);
+        assertEquals(new HashSet<>(), filmController.getLikes(1));
+    }
+
+    @Test
+    void shouldGetPopularFilmOK() {
+        Film film1 = new Film("qwerty1",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film1.setId(1);
+        Film film2 = new Film("qwerty2",
+                "Description",
+                LocalDate.of(2000, 11, 11),
+                180);
+        film2.setId(2);
+        Film film3 = new Film("qwerty3",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film3.setId(3);
+        Film film4 = new Film("qwerty4",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film4.setId(4);
+        Film film5 = new Film("qwerty5",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film5.setId(5);
+
+        assertEquals(film1, filmController.create(film1));
+        assertEquals(film2, filmController.create(film2));
+        assertEquals(film3, filmController.create(film3));
+        assertEquals(film4, filmController.create(film4));
+        assertEquals(film5, filmController.create(film5));
+
+        HashSet<Film> result1 = new HashSet<>();
+        result1.add(film1);
+        result1.add(film2);
+        assertEquals(result1, filmController.getPopularFilm(2));
+        result1.add(film3);
+        result1.add(film4);
+        assertEquals(result1, filmController.getPopularFilm(4));
+
+
+        filmController.addLike(1, 1);
+        filmController.addLike(1, 2);
+        filmController.addLike(1, 3);
+
+        filmController.addLike(2, 2);
+
+        filmController.addLike(3, 1);
+        filmController.addLike(3, 2);
+        filmController.addLike(3, 3);
+
+        filmController.addLike(4, 1);
+        filmController.addLike(4, 2);
+
+        HashSet<Film> result2 = new HashSet<>();
+
+        result2.add(film1);
+        assertEquals(result2, filmController.getPopularFilm(1));
+
+        result2.add(film3);
+        assertEquals(result2, filmController.getPopularFilm(2));
+
+        result2.add(film4);
+        assertEquals(result2, filmController.getPopularFilm(3));
+
+        result2.add(film2);
+        assertEquals(result2, filmController.getPopularFilm(4));
+
+        result2.add(film5);
+        assertEquals(result2, filmController.getPopularFilm(5));
+
+        assertEquals(result2, filmController.getPopularFilm(6));
+        assertEquals(result2, filmController.getPopularFilm(7));
+        //Жаль, что нельзя в тесте проверить без входного параметра
+        assertEquals(result2, filmController.getPopularFilm(15));
+    }
+
+    @Test
+    void shouldNotAddLikesFromUnknownUser() {
+        Film film1 = new Film("qwerty1",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film1.setId(1);
+        assertEquals(film1, filmController.create(film1));
+
+        filmController.addLike(1, 1);
+        Assertions.assertThrows(ObjectDoesntExistException.class, () -> {
+            filmController.addLike(1, 11111);
+        });
+    }
+
+    @Test
+    void shouldNotRemoveLikesFromUnknownUser() {
+        Film film1 = new Film("qwerty1",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film1.setId(1);
+        assertEquals(film1, filmController.create(film1));
+
+        filmController.addLike(1, 1);
+        filmController.addLike(1, 2);
+        filmController.addLike(1, 3);
+        Assertions.assertThrows(ObjectDoesntExistException.class, () -> {
+            filmController.deleteLike(1, 11111);
+        });
+    }
+
+    @Test
+    void shouldNotAddLikesToUnknownFilm() {
+        Film film1 = new Film("qwerty1",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film1.setId(1);
+        assertEquals(film1, filmController.create(film1));
+
+        filmController.addLike(1, 1);
+        Assertions.assertThrows(ObjectDoesntExistException.class, () -> {
+            filmController.addLike(111111, 1);
+        });
+    }
+
+    @Test
+    void shouldNotRemoveLikesFromUnknownFilm() {
+        Film film1 = new Film("qwerty1",
+                "Description",
+                LocalDate.of(1999, 10, 10),
+                120);
+        film1.setId(1);
+        assertEquals(film1, filmController.create(film1));
+
+        filmController.addLike(1, 1);
+        Assertions.assertThrows(ObjectDoesntExistException.class, () -> {
+            filmController.deleteLike(111111, 1);
+        });
     }
 
     @Test
