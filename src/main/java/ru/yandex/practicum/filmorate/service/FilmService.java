@@ -42,7 +42,7 @@ public class FilmService {
         if (result == null) {
             String errorMessage = "Фильма с Id " + filmId + " нет.";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else
             return result;
     }
@@ -51,12 +51,12 @@ public class FilmService {
         if (filmStorage.getFilmById(filmId) == null) {
             String errorMessage = "Фильма с Id " + filmId + " нет.";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else
         if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователя с Id " + userId + " нет.";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else {
             Film film = filmStorage.findAll().stream()
                     .filter(currentFilm -> currentFilm.getId().equals(filmId))
@@ -67,7 +67,7 @@ public class FilmService {
             } else {
                 String errorMessage = "Пользователь с Id " + userId + " уже поставил лайк фильму с Id " + filmId + ".";
                 log.warn(errorMessage);
-                throw new ObjectDoesntExistException();
+                throw new ObjectDoesntExistException(errorMessage);
             }
         }
     }
@@ -76,12 +76,12 @@ public class FilmService {
         if (filmStorage.getFilmById(filmId) == null) {
             String errorMessage = "Фильма с Id " + filmId + " нет.";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else
         if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователя с Id " + userId + " нет.";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else {
             Film film = filmStorage.findAll().stream()
                     .filter(currentFilm -> currentFilm.getId().equals(filmId))
@@ -89,7 +89,7 @@ public class FilmService {
             if (film.getLikes().stream().noneMatch(usersId -> usersId.equals(userId))) {
                 String errorMessage = "Пользователь с Id " + userId + " не ставил лайк фильму с Id " + filmId + ".";
                 log.warn(errorMessage);
-                throw new ObjectDoesntExistException();
+                throw new ObjectDoesntExistException(errorMessage);
             } else {
                 film.getLikes().remove(userId);
                 return film;

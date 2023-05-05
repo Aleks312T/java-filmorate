@@ -29,7 +29,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.containsKey(film.getId())) {
             String errorMessage = "Фильм с Id " + film.getId() + " уже существует.";
             log.warn(errorMessage);
-            throw new ObjectAlreadyExistException();
+            throw new ObjectAlreadyExistException(errorMessage);
         } else
         if (validateFilm(film)) {
             log.trace("Фильм {} прошел валидацию", film.getId());
@@ -39,7 +39,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         } else {
             String errorMessage = "Фильм " + film.getId() + " не прошел валидацию";
             log.warn(errorMessage);
-            throw new ValidationException();
+            throw new ValidationException(errorMessage);
         }
         return film;
     }
@@ -48,7 +48,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (!films.containsKey(film.getId()) || film.getId() == 0) {
             String errorMessage = "На обновление пришел фильм с неизвестным Id = " + film.getId();
             log.warn(errorMessage);
-            throw new NamelessObjectException();
+            throw new NamelessObjectException(errorMessage);
         } else
             if (validateFilm(film)) {
                 log.trace("Фильм {} прошел валидацию", film.getId());
@@ -57,7 +57,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             } else {
                 String errorMessage = "Фильм " + film.getId() + " не прошел валидацию";
                 log.warn(errorMessage);
-                throw new ValidationException();
+                throw new ValidationException(errorMessage);
             }
         return film;
     }
