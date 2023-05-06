@@ -17,6 +17,7 @@ public class FilmService {
     private static final Logger log = LoggerFactory.getLogger(FilmService.class);
     private final FilmStorage filmStorage;
     //Приходится делать публичным чтобы можно было добавить пользователей внутрь.
+    //Откат коммитов
     public UserStorage userStorage;
 
     @Autowired
