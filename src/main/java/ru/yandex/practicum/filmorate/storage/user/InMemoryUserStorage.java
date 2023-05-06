@@ -28,7 +28,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(user.getId())) {
             String errorMessage = "Пользователь с Id " + user.getId() + " уже зарегистрирован.";
             log.warn(errorMessage);
-            throw new ObjectAlreadyExistException();
+            throw new ObjectAlreadyExistException(errorMessage);
         } else
         if (validateUser(user)) {
             log.trace("Пользователь {} прошел валидацию", user.getId());
@@ -38,7 +38,7 @@ public class InMemoryUserStorage implements UserStorage {
         } else {
             String errorMessage = "Пользователь " + user.getId() + " не прошел валидацию";
             log.warn(errorMessage);
-            throw new ValidationException();
+            throw new ValidationException(errorMessage);
         }
         return user;
     }
@@ -47,7 +47,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (!users.containsKey(user.getId()) || user.getId() == 0) {
             String errorMessage = "На обновление пришел пользователь с неизвестным Id = " + user.getId();
             log.warn(errorMessage);
-            throw new NamelessObjectException();
+            throw new NamelessObjectException(errorMessage);
         } else
         if (validateUser(user)) {
             log.trace("Пользователь {} прошел валидацию", user.getId());
@@ -56,7 +56,7 @@ public class InMemoryUserStorage implements UserStorage {
         } else {
             String errorMessage = "Пользователь " + user.getId() + " не прошел валидацию";
             log.warn(errorMessage);
-            throw new ValidationException();
+            throw new ValidationException(errorMessage);
         }
         return user;
     }

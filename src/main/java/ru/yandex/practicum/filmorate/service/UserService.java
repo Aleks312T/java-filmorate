@@ -41,7 +41,7 @@ public class UserService {
         if (result == null) {
             String errorMessage = "Пользователя с Id " + userId + " нет.";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else
             return result;
     }
@@ -51,17 +51,17 @@ public class UserService {
         if (userId == friendId) {
             String errorMessage = "Нельзя добавить в друзья самого себя";
             log.warn(errorMessage);
-            throw new InputMismatchException();
+            throw new InputMismatchException(errorMessage);
         } else
         if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else
         if (userStorage.getUserById(friendId) == null) {
             String errorMessage = "Пользователь " + friendId + " не найден";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else {
             //Добавить друга пользователю
             User user = userStorage.findAll().stream()
@@ -81,17 +81,17 @@ public class UserService {
         if (userId == friendId) {
             String errorMessage = "Нельзя добавить в друзья самого себя";
             log.warn(errorMessage);
-            throw new InputMismatchException();
+            throw new InputMismatchException(errorMessage);
         } else
         if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else
         if (userStorage.getUserById(friendId) == null) {
             String errorMessage = "Пользователь " + friendId + " не найден";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else {
             //Удалить друга у пользователя
             User user = userStorage.findAll().stream()
@@ -102,7 +102,7 @@ public class UserService {
             else {
                 String errorMessage = "Пользователь " + userId + " не является другом " + friendId;
                 log.warn(errorMessage);
-                throw new InputMismatchException();
+                throw new InputMismatchException(errorMessage);
             }
 
             //Добавить друга у друга
@@ -114,7 +114,7 @@ public class UserService {
             else {
                 String errorMessage = "Пользователь " + friendId + " не является другом " + userId;
                 log.warn(errorMessage);
-                throw new InputMismatchException();
+                throw new InputMismatchException(errorMessage);
             }
 
             return user;
@@ -125,12 +125,12 @@ public class UserService {
         if (userStorage.getUserById(firstUserId) == null) {
             String errorMessage = "Пользователь " + firstUserId + " не найден";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else
         if (userStorage.getUserById(secondUserId) == null) {
             String errorMessage = "Пользователь " + secondUserId + " не найден";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else {
             Set<User> result;
 
@@ -147,7 +147,7 @@ public class UserService {
         if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
-            throw new ObjectDoesntExistException();
+            throw new ObjectDoesntExistException(errorMessage);
         } else {
             Set<User> result = new HashSet<>();
             Set<Integer> friends;
