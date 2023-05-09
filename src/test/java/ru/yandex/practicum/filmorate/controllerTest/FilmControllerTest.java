@@ -51,35 +51,43 @@ class FilmControllerTest {
 
     @Test
     void shouldPostFilmsOK() {
-        Film film = new Film("qwerty",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
+        Film film = Film.builder()
+                .name("qwerty")
+                .description("Description")
+                .releaseDate(LocalDate.of(1999, 10, 10))
+                .duration(120)
+                .build();
         assertEquals(film, filmController.create(film));
     }
 
     @Test
     void shouldPutAndCreateSameFilmOK() {
-        Film film = new Film("qwerty",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
+        Film film = Film.builder()
+                .name("qwerty")
+                .description("Description")
+                .releaseDate(LocalDate.of(1999, 10, 10))
+                .duration(120)
+                .build();
         assertEquals(film, filmController.create(film));
         assertEquals(film, filmController.put(film));
     }
 
     @Test
     void shouldGetAllFilmsOK() {
-        Film film1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
-        Film film2 = new Film("qwerty2",
-                "Description",
-                LocalDate.of(2000, 11, 11),
-                180);
-        film2.setId(2);
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
+        Film film2 = Film.builder()
+                .name("qwerty2")
+                .description("Description")
+                .releaseDate(LocalDate.of(2002, 12, 12))
+                .duration(180)
+                .id(2)
+                .build();
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.create(film2));
 
@@ -98,16 +106,20 @@ class FilmControllerTest {
 
     @Test
     void shouldAddLikesOK() {
-        Film film1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
-        Film film2 = new Film("qwerty2",
-                "Description",
-                LocalDate.of(2000, 11, 11),
-                180);
-        film2.setId(2);
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
+        Film film2 = Film.builder()
+                .name("qwerty2")
+                .description("Description")
+                .releaseDate(LocalDate.of(2002, 12, 12))
+                .duration(180)
+                .id(2)
+                .build();
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.create(film2));
 
@@ -132,11 +144,13 @@ class FilmControllerTest {
 
     @Test
     void shouldAddAndRemoveLikesOK() {
-        Film film1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         assertEquals(film1, filmController.create(film1));
 
         filmController.addLike(1, 1);
@@ -162,32 +176,41 @@ class FilmControllerTest {
 
     @Test
     void shouldGetPopularFilmOK() {
-        Film film1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
-        Film film2 = new Film("qwerty2",
-                "Description",
-                LocalDate.of(2000, 11, 11),
-                180);
-        film2.setId(2);
-        Film film3 = new Film("qwerty3",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film3.setId(3);
-        Film film4 = new Film("qwerty4",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film4.setId(4);
-        Film film5 = new Film("qwerty5",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film5.setId(5);
-
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
+        Film film2 = Film.builder()
+                .name("qwerty2")
+                .description("Description")
+                .releaseDate(LocalDate.of(2002, 12, 12))
+                .duration(180)
+                .id(2)
+                .build();
+        Film film3 = Film.builder()
+                .name("qwerty3")
+                .description("Description")
+                .releaseDate(LocalDate.of(2003, 3, 3))
+                .duration(120)
+                .id(3)
+                .build();
+        Film film4 = Film.builder()
+                .name("qwerty4")
+                .description("Description")
+                .releaseDate(LocalDate.of(2004, 4, 4))
+                .duration(140)
+                .id(4)
+                .build();
+        Film film5 = Film.builder()
+                .name("qwerty5")
+                .description("Description")
+                .releaseDate(LocalDate.of(2005, 5, 5))
+                .duration(50)
+                .id(5)
+                .build();
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.create(film2));
         assertEquals(film3, filmController.create(film3));
@@ -241,11 +264,13 @@ class FilmControllerTest {
 
     @Test
     void shouldNotAddLikesFromUnknownUser() {
-        Film film1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         assertEquals(film1, filmController.create(film1));
 
         filmController.addLike(1, 1);
@@ -256,11 +281,13 @@ class FilmControllerTest {
 
     @Test
     void shouldNotRemoveLikesFromUnknownUser() {
-        Film film1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         assertEquals(film1, filmController.create(film1));
 
         filmController.addLike(1, 1);
@@ -273,11 +300,13 @@ class FilmControllerTest {
 
     @Test
     void shouldNotAddLikesToUnknownFilm() {
-        Film film1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         assertEquals(film1, filmController.create(film1));
 
         filmController.addLike(1, 1);
@@ -288,11 +317,13 @@ class FilmControllerTest {
 
     @Test
     void shouldNotRemoveLikesFromUnknownFilm() {
-        Film film1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         assertEquals(film1, filmController.create(film1));
 
         filmController.addLike(1, 1);
@@ -303,23 +334,28 @@ class FilmControllerTest {
 
     @Test
     void shouldGetAllFilmsAfterChangesOK() {
-        Film film1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
+        Film film2 = Film.builder()
+                .name("qwerty2")
+                .description("Description")
+                .releaseDate(LocalDate.of(2002, 12, 12))
+                .duration(180)
+                .id(2)
+                .build();
 
-        Film film2 = new Film("qwerty2",
-                "Description",
-                LocalDate.of(2000, 11, 11),
-                180);
-        film2.setId(2);
-
-        Film newFilm1 = new Film("qwerty1",
-                "Description",
-                LocalDate.of(2020, 5, 5),
-                120);
-        newFilm1.setId(1);
+        Film newFilm1 = Film.builder()
+                .name("qwerty1")
+                .description("Description changed")
+                .releaseDate(LocalDate.of(2001, 1, 1))
+                .duration(110)
+                .id(1)
+                .build();
 
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.create(film2));
@@ -340,26 +376,33 @@ class FilmControllerTest {
 
     @Test
     void shouldPutFilmOKWithChanges() {
-        Film film1 = new Film("qwerty",
-                "Description1",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
-        Film film2 = new Film("qwerty",
-                "Description2",
-                LocalDate.of(2000, 11, 11),
-                180);
-        film2.setId(1);
+        Film film1 = Film.builder()
+                .name("qwerty")
+                .description("Description1")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
+        Film film2 = Film.builder()
+                .name("qwerty")
+                .description("Description2")
+                .releaseDate(LocalDate.of(2002, 12, 12))
+                .duration(180)
+                .id(1)
+                .build();
         assertEquals(film1, filmController.create(film1));
         assertEquals(film2, filmController.put(film2));
     }
 
     @Test
     void shouldNotPutUnknownFilm() {
-        Film film = new Film("qwerty",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
+        Film film = Film.builder()
+                .name("qwerty")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         Assertions.assertThrows(RuntimeException.class, () -> {
             filmController.put(film);
         });
@@ -375,17 +418,20 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowObjectAlreadyExistExceptionBecauseOfId() throws ObjectAlreadyExistException {
-        Film film1 = new Film("qwerty1",
-                "Description1",
-                LocalDate.of(1999, 10, 10),
-                120);
-        film1.setId(1);
-
-        Film film2 = new Film("qwerty2",
-                "Description2",
-                LocalDate.of(2000, 11, 11),
-                180);
-        film2.setId(1);
+        Film film1 = Film.builder()
+                .name("qwerty1")
+                .description("Description1")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
+        Film film2 = Film.builder()
+                .name("qwerty2")
+                .description("Description2")
+                .releaseDate(LocalDate.of(2002, 12, 12))
+                .duration(180)
+                .id(1)                  //Ошибочное ID
+                .build();
 
         filmController.create(film1);
         Assertions.assertThrows(ObjectAlreadyExistException.class, () -> {
@@ -395,10 +441,13 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfName() throws ValidationException {
-        Film film = new Film("     ",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                120);
+        Film film = Film.builder()
+                .name("          ")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });
@@ -406,10 +455,13 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfDateInPast() throws ValidationException {
-        Film film = new Film("qwerty",
-                "Description",
-                LocalDate.of(199, 10, 10),
-                120);
+        Film film = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(9, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });
@@ -417,10 +469,13 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfDateInFuture() throws ValidationException {
-        Film film = new Film("qwerty",
-                "Description",
-                LocalDate.of(19999, 10, 10),
-                120);
+        Film film = Film.builder()
+                .name("qwerty")
+                .description("Description")
+                .releaseDate(LocalDate.of(200001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });
@@ -429,10 +484,13 @@ class FilmControllerTest {
     @Test
     void shouldThrowValidationExceptionBecauseOfDescription() throws ValidationException {
         //Очень длинное описание...
-        Film film = new Film("qwerty",
-                "1".repeat(201),
-                LocalDate.of(1999, 10, 10),
-                120);
+        Film film = Film.builder()
+                .name("qwerty1")
+                .description("1".repeat(201))
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(120)
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });
@@ -440,10 +498,13 @@ class FilmControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfDuration() throws ValidationException {
-        Film film = new Film("qwerty",
-                "Description",
-                LocalDate.of(1999, 10, 10),
-                -120);
+        Film film = Film.builder()
+                .name("qwerty1")
+                .description("Description")
+                .releaseDate(LocalDate.of(2001, 11, 11))
+                .duration(-120)
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.create(film);
         });

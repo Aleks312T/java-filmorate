@@ -51,7 +51,7 @@ public class UserStorageDBImpl implements UserStorageDB {
         while (srs.next()) {
             users.add(userMap(srs));
         }
-        return null;
+        return users;
     }
 
     @Override
