@@ -13,3 +13,7 @@ MERGE INTO rating (ratingId, ratingName)
     (3, 'PG-13'),
     (4, 'R'),
     (5, 'NC-17');
+
+MERGE INTO friendshipStatus (friendshipStatusId, status)
+    VALUES (1, 'Не подтверждённый друг'),
+           (2, 'Подтверждённый друг');
