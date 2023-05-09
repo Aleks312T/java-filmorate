@@ -14,12 +14,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
 public class UserStorageDBImpl implements UserStorageDB {
     private static final Logger log = LoggerFactory.getLogger(UserStorageDBImpl.class);
     private final JdbcTemplate jdbcTemplate;
+
+//    /* У меня произошел баг, из-за которого я не могу сделать данное действие через БД.
+//    *  При вызове updateUser с новым пользователем, у меня пробрасывается соответствующая ошибка с нужным кодом
+//    *  После чего ОШИБКА ОБРАБАТЫВАЛАСЬ, программа продолжала работу НЕ ПРОБРАСЫВАЯ ЕЕ и возвращала 500 (которое
+//    *  вообще не пойми с чем связана) вместо нужного 404.
+//    *  Не знаю как исправить, пытался по-разному. Пока стоит вот такая затычка.
+//    * */
+//    Set<Integer> userIds = new HashSet<>();
 
     @Override
     public User createUser(User user) {
@@ -28,13 +37,15 @@ public class UserStorageDBImpl implements UserStorageDB {
         String sql = "INSERT INTO users (login, userName, email, birthday) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, user.getLogin(), user.getName(), user.getEmail(), user.getBirthday());
         user.setId(getNewUserId());
+//        //Надо убрать, когда исправлю баг (1)
+//        userIds.add(user.getId());
         log.debug("Пользователь {} добавлен", user.getId());
         return user;
     }
 
     @Override
     public User updateUser(User user) {
-        String sql = "UPDATE users SET login = ?, userName = ?, email = ?, birthday = ? WHERE USER_ID = ?";
+        String sql = "UPDATE users SET login = ?, userName = ?, email = ?, birthday = ? WHERE userId = ?";
         jdbcTemplate.update(sql, user.getLogin(), user.getName(), user.getEmail(), user.getBirthday(), user.getId());
         return user;
     }
@@ -64,19 +75,46 @@ public class UserStorageDBImpl implements UserStorageDB {
         }
     }
 
+//    // Метод под баг (1)
+//    public User getUserOrNull(int id) {
+//        log.trace("Получение пользователя (костыльное) ");
+//        if(userIds.contains(id))
+//            return User.builder().id(id).build();
+//        else
+//            return null;
+//    }
+
     public User addFriend(Integer userId, Integer friendId) {
-        User user = getUser(friendId);
         User friend = getUser(friendId);
-        //TODO: дебажить
         List<User> userFriends = getFriends(userId);
         if (userFriends == null || !userFriends.contains(friend)) {
-            String sqlQuery = "INSERT INTO friends (userId, friendId, friendshipStatusId) "
+            String sql = "INSERT INTO friends (userId, friendId, friendshipStatusId) "
                     + "VALUES(?, ?, ?)";
-            jdbcTemplate.update(sqlQuery, userId, friendId, 2);
+            //TODO: добавить запись о подтвержденных друзьях
+            jdbcTemplate.update(sql, userId, friendId, 2);
             return getUser(userId);
         } else {
             throw new InputMismatchException("Пользователь с id:" + friendId
                     + "уже добавлен в список друзей пользователя с id:" + userId);
+        }
+    }
+
+    public User deleteFriend(Integer userId, Integer friendId) {
+        User friend = getUser(friendId);
+        List<User> userFriends = getFriends(userId);
+        if (userFriends == null) {
+            String errorMessage = "У пользователя с Id " + userId + " нет друзей.";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else
+        if (userFriends.contains(friend)) {
+            String sql = "DELETE FROM FRIENDS WHERE userId = ? AND friendId = ?";
+            jdbcTemplate.update(sql, userId, friendId);
+            return getUser(userId);
+        } else {
+            String errorMessage = "У пользователя с Id " + userId + " нет друга с Id " + friendId + ".";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
         }
     }
 
@@ -91,6 +129,20 @@ public class UserStorageDBImpl implements UserStorageDB {
             friends.add(userMap(srs));
         }
         return friends;
+    }
+
+    public Collection<User> getCommonFriends(Integer firstUserId, Integer secondUserId) {
+        List<User> commonFriends = new ArrayList<>();
+        String sqlQuery = "SELECT * FROM users "
+                        + "WHERE users.userId IN ("
+                            + "SELECT friendId from friends "
+                            + "WHERE userId IN (?, ?) "
+                            + "AND friendId NOT IN (?, ?))";
+        SqlRowSet srs = jdbcTemplate.queryForRowSet(sqlQuery, firstUserId, secondUserId, firstUserId, secondUserId);
+        while (srs.next()) {
+            commonFriends.add(userMap(srs));
+        }
+        return commonFriends;
     }
 
     private int getNewUserId() {

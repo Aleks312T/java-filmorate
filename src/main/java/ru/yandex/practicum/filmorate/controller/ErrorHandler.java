@@ -36,7 +36,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)                 //400
+    @ResponseStatus(HttpStatus.NOT_FOUND)                   //404
     public ErrorResponse handleObjectDoesntExistException(final ObjectDoesntExistException e) {
         String errorMessage = "Объекта не существует.";
         log.warn(errorMessage);
@@ -61,7 +61,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)       //500
-    public ErrorResponse handleUnknownException(final SQLException e) {
+    public ErrorResponse handleSQLException(final SQLException e) {
         String errorMessage = "Произошла ошибка в базе данных.";
         log.warn(errorMessage);
         return new ErrorResponse(errorMessage, e.getMessage());
