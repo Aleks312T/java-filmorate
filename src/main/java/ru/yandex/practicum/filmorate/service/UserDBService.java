@@ -53,9 +53,29 @@ public class UserDBService {
             return result;
     }
 
-    //TODO: нужно будет доделать
     public User addFriend(Integer userId, Integer friendId) {
-        return null;
+        if (userId == null || friendId == null) {
+            String errorMessage = "Отсутствует входной идентификатор";
+            log.warn(errorMessage);
+            throw new NullPointerException(errorMessage);
+        } else
+        if (userId == friendId) {
+            String errorMessage = "Нельзя добавить в друзья самого себя";
+            log.warn(errorMessage);
+            throw new InputMismatchException(errorMessage);
+        } else
+        if (userStorageDB.getUser(userId) == null) {
+            String errorMessage = "Пользователь " + userId + " не найден";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else
+        if (userStorageDB.getUser(friendId) == null) {
+            String errorMessage = "Пользователь " + friendId + " не найден";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else {
+            return userStorageDB.addFriend(userId, friendId);
+        }
     }
 
     //TODO: нужно будет доделать
@@ -63,14 +83,23 @@ public class UserDBService {
         return null;
     }
 
+    public Collection<User> getFriends(Integer userId) {
+        if (userId == null) {
+            String errorMessage = "Отсутствует входной идентификатор";
+            log.warn(errorMessage);
+            throw new NullPointerException(errorMessage);
+        } else
+        if (userStorageDB.getUser(userId) == null) {
+            String errorMessage = "Пользователь " + userId + " не найден";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else {
+            return userStorageDB.getFriends(userId);
+        }
+    }
+
     //TODO: нужно будет доделать
     public Collection<User> getCommonFriends(Integer firstUserId, Integer secondUserId) {
         return null;
     }
-
-    //TODO: нужно будет доделать
-    public Collection<User> getFriends(Integer userId) {
-        return null;
-    }
-
 }

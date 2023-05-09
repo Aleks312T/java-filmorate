@@ -13,6 +13,8 @@ import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.exception.ErrorResponse;
 
+import java.sql.SQLException;
+
 @ControllerAdvice
 public class ErrorHandler {
     private static final Logger log = LoggerFactory.getLogger(ErrorHandler.class);
@@ -53,6 +55,14 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)                 //400
     public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         String errorMessage = "Некорректные входные аргументы.";
+        log.warn(errorMessage);
+        return new ErrorResponse(errorMessage, e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)       //500
+    public ErrorResponse handleUnknownException(final SQLException e) {
+        String errorMessage = "Произошла ошибка в базе данных.";
         log.warn(errorMessage);
         return new ErrorResponse(errorMessage, e.getMessage());
     }

@@ -12,4 +12,8 @@ public interface UserStorageDB {
     List<User> getAllUsers();
 
     User getUser(int id);
+
+    User addFriend(Integer userId, Integer friendId);
+
+    public List<User> getFriends(Integer userId);
 }

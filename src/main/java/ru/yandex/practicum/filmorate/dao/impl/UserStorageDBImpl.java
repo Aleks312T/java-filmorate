@@ -13,9 +13,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
@@ -34,7 +32,6 @@ public class UserStorageDBImpl implements UserStorageDB {
         return user;
     }
 
-    //TODO: нужно будет проверить
     @Override
     public User updateUser(User user) {
         String sql = "UPDATE users SET login = ?, userName = ?, email = ?, birthday = ? WHERE USER_ID = ?";
@@ -42,7 +39,6 @@ public class UserStorageDBImpl implements UserStorageDB {
         return user;
     }
 
-    //TODO: нужно будет доделать
     @Override
     public List<User> getAllUsers() {
         String sqlQuery = "SELECT * FROM users";
@@ -66,6 +62,35 @@ public class UserStorageDBImpl implements UserStorageDB {
             log.warn(errorMessage);
             throw new ObjectDoesntExistException(errorMessage);
         }
+    }
+
+    public User addFriend(Integer userId, Integer friendId) {
+        User user = getUser(friendId);
+        User friend = getUser(friendId);
+        //TODO: дебажить
+        List<User> userFriends = getFriends(userId);
+        if (userFriends == null || !userFriends.contains(friend)) {
+            String sqlQuery = "INSERT INTO friends (userId, friendId, friendshipStatusId) "
+                    + "VALUES(?, ?, ?)";
+            jdbcTemplate.update(sqlQuery, userId, friendId, 2);
+            return getUser(userId);
+        } else {
+            throw new InputMismatchException("Пользователь с id:" + friendId
+                    + "уже добавлен в список друзей пользователя с id:" + userId);
+        }
+    }
+
+    public List<User> getFriends(Integer userId) {
+        List<User> friends = new ArrayList<>();
+        String sqlQuery = "SELECT * FROM users "
+                + "WHERE users.userId IN "
+                    + "(SELECT friendId from friends "
+                    + "WHERE userId = ?)";
+        SqlRowSet srs = jdbcTemplate.queryForRowSet(sqlQuery, userId);
+        while (srs.next()) {
+            friends.add(userMap(srs));
+        }
+        return friends;
     }
 
     private int getNewUserId() {
