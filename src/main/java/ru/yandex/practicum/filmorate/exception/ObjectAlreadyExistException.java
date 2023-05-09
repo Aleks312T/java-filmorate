@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.exception;
 
-import java.util.InputMismatchException;
-
-public class ObjectAlreadyExistException extends InputMismatchException {
+public class ObjectAlreadyExistException extends RuntimeException {
     public ObjectAlreadyExistException() {
         super();
     }
