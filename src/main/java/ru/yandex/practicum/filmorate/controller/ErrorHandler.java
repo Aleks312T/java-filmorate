@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.exception.ErrorResponse;
 
+import javax.servlet.ServletException;
 import java.sql.SQLException;
 
 @ControllerAdvice
@@ -23,6 +24,14 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)                   //404
     public ErrorResponse handleNamelessObjectException(final NamelessObjectException e) {
         String errorMessage = "Пришел безымянный объект.";
+        log.warn(errorMessage);
+        return new ErrorResponse(errorMessage, e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)                   //404
+    public ErrorResponse handleServletException(final ServletException e) {
+        String errorMessage = "Костыльная обработка ошибки.";
         log.warn(errorMessage);
         return new ErrorResponse(errorMessage, e.getMessage());
     }

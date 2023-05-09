@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.impl.UserStorageDBImpl;
+import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -67,6 +68,11 @@ public class UserDBService {
             log.warn(errorMessage);
             throw new ValidationException(errorMessage);
         } else
+        if (userStorageDB.getUser(user.getId()) != null) {
+            String errorMessage = "Такой пользователь уже есть.";
+            log.warn(errorMessage);
+            throw new ObjectAlreadyExistException(errorMessage);
+        }
 //        // Костыль от бага (1)
 //        if(userStorageDB.getUserOrNull(user.getId()) == null) {
 //            String errorMessage = "Пользователя с Id " + user.getId() + " нет.";
