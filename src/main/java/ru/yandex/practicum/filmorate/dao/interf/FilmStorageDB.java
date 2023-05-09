@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.dao.interf;
 
-import ru.yandex.practicum.filmorate.model.User;
-import java.util.List;
-
+//TODO: нужно будет доделать
 public interface FilmStorageDB {
 
 }

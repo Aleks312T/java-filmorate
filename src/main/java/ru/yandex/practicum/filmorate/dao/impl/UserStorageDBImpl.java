@@ -8,14 +8,12 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.interf.UserStorageDB;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,21 +34,31 @@ public class UserStorageDBImpl implements UserStorageDB {
         return user;
     }
 
+    //TODO: нужно будет проверить
     @Override
     public User updateUser(User user) {
+        String sql = "UPDATE users SET login = ?, userName = ?, email = ?, birthday = ? WHERE USER_ID = ?";
+        jdbcTemplate.update(sql, user.getLogin(), user.getName(), user.getEmail(), user.getBirthday(), user.getId());
         return user;
     }
 
+    //TODO: нужно будет доделать
     @Override
     public List<User> getAllUsers() {
+        String sqlQuery = "SELECT * FROM users";
+        SqlRowSet srs = jdbcTemplate.queryForRowSet(sqlQuery);
+        List<User> users = new ArrayList<>();
+        while (srs.next()) {
+            users.add(userMap(srs));
+        }
         return null;
     }
 
     @Override
-    public User getUserById(int id) {
+    public User getUser(int id) {
         log.trace("Получение пользователя");
         String sql = "SELECT * FROM users WHERE USERID=?";
-        SqlRowSet users = jdbcTemplate.queryForRowSet(sql);
+        SqlRowSet users = jdbcTemplate.queryForRowSet(sql, id);
         if (users.next()) {
             return userMap(users);
         } else {
@@ -70,23 +78,22 @@ public class UserStorageDBImpl implements UserStorageDB {
         return id.get(0);
     }
 
-    private User makeUser(ResultSet userRows) throws SQLException {
-        User user = User.builder()
-                .id(userRows.getInt("userId"))
-                .login(userRows.getString("login"))
-                .email(userRows.getString("email"))
-                .birthday(userRows.getObject("birthday", LocalDate.class))
-                .build();
-
-        if (userRows.getString("userName").isBlank()) {
-            user.setName(user.getLogin());
-        } else {
-            user.setName(userRows.getString("userName"));
-        }
-        //TODO: возможно, нужно будет доделать
-
-        return user;
-    }
+//    private User makeUser(ResultSet userRows) throws SQLException {
+//        User user = User.builder()
+//                .id(userRows.getInt("userId"))
+//                .login(userRows.getString("login"))
+//                .email(userRows.getString("email"))
+//                .birthday(userRows.getObject("birthday", LocalDate.class))
+//                .build();
+//
+//        if (userRows.getString("userName").isBlank()) {
+//            user.setName(user.getLogin());
+//        } else {
+//            user.setName(userRows.getString("userName"));
+//        }
+//        //TODO: возможно, нужно будет доделать
+//        return user;
+//    }
 
     private static User userMap(SqlRowSet srs) {
         Integer id = srs.getInt("userId");

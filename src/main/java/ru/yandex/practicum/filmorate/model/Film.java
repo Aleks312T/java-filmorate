@@ -12,9 +12,6 @@ import java.util.Set;
 @Data
 @Builder
 public class Film {
-    Set<Integer> likes = new HashSet<>();
-    protected Integer id;
-
     @NotBlank
     @NonNull
     //Оставил NonNull, чтобы name требовался в конструкторе
@@ -32,6 +29,17 @@ public class Film {
     @Min(1)
     @Max(1200)
     protected Integer duration;                     //Minutes
+
+    Set<Integer> likes = new HashSet<>();
+    protected Integer id;
+
+    //Решил отдельно сделать нужный мне конструктор
+    public Film(String name, String description, LocalDate releaseDate, Integer duration) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
 
     public Set<Integer> getLikes() {
         return likes;

@@ -11,5 +11,5 @@ public interface UserStorageDB {
 
     List<User> getAllUsers();
 
-    User getUserById(int id);
+    User getUser(int id);
 }
