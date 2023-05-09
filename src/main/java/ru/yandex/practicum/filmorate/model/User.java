@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jdk.jshell.Snippet;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -13,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
     Set<Integer> friends = new HashSet<>();
     protected Integer id;

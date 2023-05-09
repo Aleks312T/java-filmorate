@@ -36,7 +36,12 @@ public class UserService {
         return userStorage.put(user);
     }
 
-    public User getUser(int userId) {
+    public User getUser(Integer userId) {
+        if (userId == null) {
+            String errorMessage = "Отсутствует входной идентификатор";
+            log.warn(errorMessage);
+            throw new NullPointerException(errorMessage);
+        }
         User result = userStorage.getUserById(userId);
         if (result == null) {
             String errorMessage = "Пользователя с Id " + userId + " нет.";
@@ -47,7 +52,7 @@ public class UserService {
     }
 
     //Возможно решение стоит добавить в InMemoryUserStorage
-    public User addFriend(int userId, int friendId) {
+    public User addFriend(Integer userId, Integer friendId) {
         if (userId == friendId) {
             String errorMessage = "Нельзя добавить в друзья самого себя";
             log.warn(errorMessage);
@@ -77,7 +82,7 @@ public class UserService {
         }
     }
 
-    public User deleteFriend(int userId, int friendId) {
+    public User deleteFriend(Integer userId, Integer friendId) {
         if (userId == friendId) {
             String errorMessage = "Нельзя добавить в друзья самого себя";
             log.warn(errorMessage);
@@ -121,7 +126,7 @@ public class UserService {
         }
     }
 
-    public Collection<User> getCommonFriends(int firstUserId, int secondUserId) {
+    public Collection<User> getCommonFriends(Integer firstUserId, Integer secondUserId) {
         if (userStorage.getUserById(firstUserId) == null) {
             String errorMessage = "Пользователь " + firstUserId + " не найден";
             log.warn(errorMessage);
@@ -143,7 +148,7 @@ public class UserService {
         }
     }
 
-    public Collection<User> getFriends(int userId) {
+    public Collection<User> getFriends(Integer userId) {
         if (userStorage.getUserById(userId) == null) {
             String errorMessage = "Пользователь " + userId + " не найден";
             log.warn(errorMessage);
