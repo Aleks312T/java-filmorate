@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class User {
+    //TODO: удалить, когда закончу с UserServiseDBImpl
     Set<Integer> friends = new HashSet<>();
     protected Integer id;
 

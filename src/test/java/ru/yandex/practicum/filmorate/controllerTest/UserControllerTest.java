@@ -11,8 +11,6 @@ import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserDBService;
-import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -31,17 +29,23 @@ class UserControllerTest {
 
     @Test
     void shouldPostUserOK() {
-        User user = new User("login",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
+        User user = User.builder()
+                .login("login")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
         assertEquals(user, userController.create(user));
     }
 
     @Test
     void shouldUseLoginForEmptyNameOK() {
-        User user = new User("login",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
+        User user = User.builder()
+                .login("login")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
         User result = userController.create(user);
         assertEquals(user, result);
         assertEquals("login", result.getName());
@@ -49,15 +53,18 @@ class UserControllerTest {
 
     @Test
     void shouldPutSameUserAgainOK() {
-        User user1 = new User("login",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user1.setId(1);
-
-        User user2 = new User("login",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user2.setId(1);
+        User user1 = User.builder()
+                .login("login")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user1, userController.put(user2));
@@ -65,15 +72,18 @@ class UserControllerTest {
 
     @Test
     void shouldChangeUserOK() {
-        User user1 = new User("login1",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user1.setId(1);
-
-        User user2 = new User("login2",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user2.setId(1);
+        User user1 = User.builder()
+                .login("login1")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login2")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2002, 2, 2))
+                .id(1)
+                .build();
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.put(user2));
@@ -81,14 +91,18 @@ class UserControllerTest {
 
     @Test
     void shouldAddToFriendsOK() {
-        User user1 = new User("login1",
-                "qwerty@mail.ru",
-                LocalDate.of(2001, 11, 11));
-        user1.setId(1);
-        User user2 = new User("login2",
-                "qwerty@mail.ru",
-                LocalDate.of(2002, 12, 12));
-        user2.setId(2);
+        User user1 = User.builder()
+                .login("login1")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login2")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2002, 2, 2))
+                .id(2)
+                .build();
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
@@ -111,18 +125,24 @@ class UserControllerTest {
 
     @Test
     void shouldAddAndRemoveToFriendsOK() {
-        User user1 = new User("login1",
-                "qwerty1@mail.ru",
-                LocalDate.of(2001, 10, 10));
-        user1.setId(1);
-        User user2 = new User("login2",
-                "qwerty2@mail.ru",
-                LocalDate.of(2002, 10, 10));
-        user2.setId(2);
-        User user3 = new User("login3",
-                "qwerty3@mail.ru",
-                LocalDate.of(2003, 10, 10));
-        user3.setId(3);
+        User user1 = User.builder()
+                .login("login1")
+                .email("qwerty1@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login2")
+                .email("qwerty2@mail.ru")
+                .birthday(LocalDate.of(2002, 2, 2))
+                .id(2)
+                .build();
+        User user3 = User.builder()
+                .login("login3")
+                .email("qwerty3@mail.ru")
+                .birthday(LocalDate.of(2003, 3, 3))
+                .id(3)
+                .build();
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
@@ -166,14 +186,18 @@ class UserControllerTest {
 
     @Test
     void shouldGetFriendsOK() {
-        User user1 = new User("login1",
-                "qwerty@mail.ru",
-                LocalDate.of(2001, 11, 11));
-        user1.setId(1);
-        User user2 = new User("login2",
-                "qwerty@mail.ru",
-                LocalDate.of(2002, 12, 12));
-        user2.setId(2);
+        User user1 = User.builder()
+                .login("login1")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login2")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2002, 2, 2))
+                .id(2)
+                .build();
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
@@ -192,22 +216,30 @@ class UserControllerTest {
 
     @Test
     void shouldGetCommonFriendsOK() {
-        User user1 = new User("login1",
-                "qwerty@mail.ru",
-                LocalDate.of(2001, 11, 11));
-        user1.setId(1);
-        User user2 = new User("login2",
-                "qwerty@mail.ru",
-                LocalDate.of(2002, 12, 12));
-        user2.setId(2);
-        User user3 = new User("login3",
-                "qwerty@mail.ru",
-                LocalDate.of(2003, 12, 13));
-        user3.setId(3);
-        User user4 = new User("login4",
-                "qwerty@mail.ru",
-                LocalDate.of(2004, 12, 14));
-        user4.setId(4);
+        User user1 = User.builder()
+                .login("login1")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login2")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2002, 2, 2))
+                .id(2)
+                .build();
+        User user3 = User.builder()
+                .login("login3")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2003, 3, 4))
+                .id(3)
+                .build();
+        User user4 = User.builder()
+                .login("login4")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2004, 4, 4))
+                .id(4)
+                .build();
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
@@ -241,22 +273,30 @@ class UserControllerTest {
 
     @Test
     void shouldGetCommonFriendsAfterDeleteOK() {
-        User user1 = new User("login1",
-                "qwerty@mail.ru",
-                LocalDate.of(2001, 11, 11));
-        user1.setId(1);
-        User user2 = new User("login2",
-                "qwerty@mail.ru",
-                LocalDate.of(2002, 12, 12));
-        user2.setId(2);
-        User user3 = new User("login3",
-                "qwerty@mail.ru",
-                LocalDate.of(2003, 12, 13));
-        user3.setId(3);
-        User user4 = new User("login4",
-                "qwerty@mail.ru",
-                LocalDate.of(2004, 12, 14));
-        user4.setId(4);
+        User user1 = User.builder()
+                .login("login1")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login2")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2002, 2, 2))
+                .id(2)
+                .build();
+        User user3 = User.builder()
+                .login("login3")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2003, 3, 4))
+                .id(3)
+                .build();
+        User user4 = User.builder()
+                .login("login4")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2004, 4, 4))
+                .id(4)
+                .build();
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
@@ -283,15 +323,18 @@ class UserControllerTest {
 
     @Test
     void shouldGetUsersOK() {
-        User user1 = new User("login1",
-                "qwerty1@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user1.setId(1);
-
-        User user2 = new User("login2",
-                "qwerty2@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user1.setId(2);
+        User user1 = User.builder()
+                .login("login1")
+                .email("qwerty1@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login2")
+                .email("qwerty2@mail.ru")
+                .birthday(LocalDate.of(2002, 2, 2))
+                .id(2)
+                .build();
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
@@ -311,20 +354,25 @@ class UserControllerTest {
 
     @Test
     void shouldGetUsersAfterChangesOK() {
-        User user1 = new User("login1",
-                "qwerty1@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user1.setId(1);
+        User user1 = User.builder()
+                .login("login1")
+                .email("qwerty1@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login2")
+                .email("qwerty2@mail.ru")
+                .birthday(LocalDate.of(2002, 2, 2))
+                .id(2)
+                .build();
 
-        User user2 = new User("login2",
-                "qwerty2@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user2.setId(2);
-
-        User newUser1 = new User("login111",
-                "qwerty1@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        newUser1.setId(1);
+        User newUser1 = User.builder()
+                .login("login111")
+                .email("qwerty1@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
 
         assertEquals(user1, userController.create(user1));
         assertEquals(user2, userController.create(user2));
@@ -345,9 +393,12 @@ class UserControllerTest {
 
     @Test
     void shouldNotPutUnknownUser() throws RuntimeException {
-        User user = new User("login",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
+        User user = User.builder()
+                .login("login1")
+                .email("qwerty1@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
         Assertions.assertThrows(RuntimeException.class, () -> {
             userController.put(user);
         });
@@ -363,15 +414,18 @@ class UserControllerTest {
 
     @Test
     void shouldThrowObjectAlreadyExistExceptionBecauseOfId() throws ObjectAlreadyExistException {
-        User user1 = new User("login1",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user1.setId(1);
-
-        User user2 = new User("login2",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user2.setId(1);
+        User user1 = User.builder()
+                .login("login1")
+                .email("qwerty1@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User user2 = User.builder()
+                .login("login2")
+                .email("qwerty2@mail.ru")
+                .birthday(LocalDate.of(2002, 2, 2))
+                .id(1)                      //Неверный ID
+                .build();
 
         userController.create(user1);
         Assertions.assertThrows(ObjectAlreadyExistException.class, () -> {
@@ -381,9 +435,12 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfBadEmail1() throws ValidationException {
-        User user = new User("login",
-                "qwertymail.ru",
-                LocalDate.of(1999, 10, 10));
+        User user = User.builder()
+                .login("login1")
+                .email("qwertymail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
         });
@@ -391,9 +448,12 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfEmptyEmail() throws ValidationException {
-        User user = new User("login",
-                "             ",
-                LocalDate.of(1999, 10, 10));
+        User user = User.builder()
+                .login("login1")
+                .email("               ")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
         });
@@ -401,10 +461,12 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfBirthday() throws ValidationException {
-        User user = new User("login",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user.setBirthday(LocalDate.of(19999, 11, 11));
+        User user = User.builder()
+                .login("login1")
+                .email("qwerty1@mail.ru")
+                .birthday(LocalDate.of(200001, 1, 1))
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
         });
@@ -412,10 +474,12 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfSpacesInLogin() throws ValidationException {
-        User user = new User("l o g i n",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user.setBirthday(LocalDate.of(19999, 11, 11));
+        User user = User.builder()
+                .login("l o g i n 1")
+                .email("qwerty1@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
         });
@@ -423,10 +487,12 @@ class UserControllerTest {
 
     @Test
     void shouldThrowValidationExceptionBecauseOfEmptyLogin() throws ValidationException {
-        User user = new User("",
-                "qwerty@mail.ru",
-                LocalDate.of(1999, 10, 10));
-        user.setBirthday(LocalDate.of(19999, 11, 11));
+        User user = User.builder()
+                .login("")
+                .email("qwerty1@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             userController.create(user);
         });
