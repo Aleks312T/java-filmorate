@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.impl.GenreStorageDBImpl;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
@@ -16,7 +15,6 @@ import java.util.List;
 public class GenreDBService {
     private static final Logger log = LoggerFactory.getLogger(UserDBService.class);
 
-    //TODO: в конце поменять обратно
     private final GenreStorageDBImpl genreStorage;
 
     public List<Genre> getAll() {

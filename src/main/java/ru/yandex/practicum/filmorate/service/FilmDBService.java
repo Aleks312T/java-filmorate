@@ -1,38 +1,29 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.dao.impl.FilmStorageDBImpl;
 import ru.yandex.practicum.filmorate.dao.impl.UserStorageDBImpl;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.InputMismatchException;
-import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class FilmDBService {
     private static final Logger log = LoggerFactory.getLogger(FilmDBService.class);
 
-    //TODO: в конце поменять обратно
     private final FilmStorageDBImpl filmStorageDB;
     private final UserStorageDBImpl userStorageDB;
 
-    @Autowired
-    public FilmDBService(FilmStorageDBImpl filmStorage, UserStorageDBImpl userStorage) {
-        this.filmStorageDB = filmStorage;
-        this.userStorageDB = userStorage;
-    }
 
     public Collection<Film> findAll() {
         return filmStorageDB.findAll();
@@ -49,7 +40,7 @@ public class FilmDBService {
             log.warn(errorMessage);
             throw new ObjectAlreadyExistException(errorMessage);
         }
-        if(validateFilm(film))
+        if (validateFilm(film))
             return filmStorageDB.createFilm(film);
         else {
             String errorMessage = "Фильм не прошел валидацию.";
@@ -64,7 +55,7 @@ public class FilmDBService {
             log.warn(errorMessage);
             throw new NullPointerException(errorMessage);
         } else
-        if(film.getId() == null) {
+        if (film.getId() == null) {
             String errorMessage = "Отсутствует входной идентификатор.";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException(errorMessage);
@@ -74,7 +65,7 @@ public class FilmDBService {
             log.warn(errorMessage);
             throw new ObjectDoesntExistException(errorMessage);
         } else
-        if(!validateFilm(film)) {
+        if (!validateFilm(film)) {
             String errorMessage = "Фильм не прошел валидацию.";
             log.warn(errorMessage);
             throw new ValidationException(errorMessage);
@@ -84,13 +75,11 @@ public class FilmDBService {
     }
 
     public Film getFilm(Integer filmId) {
-
         if (filmId == null) {
             String errorMessage = "Отсутствуют входные данные.";
             log.warn(errorMessage);
             throw new NullPointerException(errorMessage);
-        } else
-        {
+        } else {
             Film result = filmStorageDB.getFilm(filmId);
             if (result == null) {
                 String errorMessage = "Фильма с Id " + filmId + " нет.";
@@ -99,7 +88,6 @@ public class FilmDBService {
             } else
                 return result;
         }
-
     }
 
     public Film addLike(int filmId, int userId) {

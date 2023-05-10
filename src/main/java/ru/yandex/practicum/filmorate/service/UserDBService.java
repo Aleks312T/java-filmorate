@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.impl.UserStorageDBImpl;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
@@ -20,8 +19,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserDBService {
     private static final Logger log = LoggerFactory.getLogger(UserDBService.class);
-    //TODO: в конце поменять обратно
-    //private final UserStorageDB userStorageDB;
+
     private final UserStorageDBImpl userStorageDB;
 
     public User create(User user) {
@@ -35,7 +33,7 @@ public class UserDBService {
             log.warn(errorMessage);
             throw new ObjectAlreadyExistException(errorMessage);
         }
-        if(validateUser(user))
+        if (validateUser(user))
             return userStorageDB.createUser(user);
         else {
             String errorMessage = "Пользователь не прошел валидацию.";
@@ -54,12 +52,12 @@ public class UserDBService {
             log.warn(errorMessage);
             throw new NullPointerException(errorMessage);
         } else
-        if(user.getId() == null) {
+        if (user.getId() == null) {
             String errorMessage = "Отсутствует входной идентификатор.";
             log.warn(errorMessage);
             throw new ObjectDoesntExistException(errorMessage);
         } else
-        if(!validateUser(user)) {
+        if (!validateUser(user)) {
             String errorMessage = "Пользователь не прошел валидацию.";
             log.warn(errorMessage);
             throw new ValidationException(errorMessage);
@@ -147,7 +145,6 @@ public class UserDBService {
         }
     }
 
-    //TODO: нужно будет доделать
     public Collection<User> getCommonFriends(Integer firstUserId, Integer secondUserId) {
         if (userStorageDB.getUser(firstUserId) == null) {
             String errorMessage = "Пользователь " + firstUserId + " не найден";

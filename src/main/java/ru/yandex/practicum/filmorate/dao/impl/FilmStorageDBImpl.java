@@ -54,7 +54,6 @@ public class FilmStorageDBImpl implements FilmStorageDB {
                 film.getMpa().getId());
 
         film.setId(getNewFilmId());
-        //disconnectFilmGenre(film);
 
         if (film.getGenres() != null) {
             disconnectFilmGenre(film.getId());
@@ -80,8 +79,6 @@ public class FilmStorageDBImpl implements FilmStorageDB {
                 film.getMpa().getId(),
                 film.getId());
 
-        //disconnectFilmGenre(film);
-
         if (film.getGenres() != null) {
             disconnectFilmGenre(film.getId());
             connectFilmGenre(film);
@@ -100,7 +97,6 @@ public class FilmStorageDBImpl implements FilmStorageDB {
                 "LEFT JOIN genre AS g ON g.genreId = fg.genreId " +
                 "LEFT JOIN likes AS l ON l.filmId = f.filmId " +
                 "WHERE f.filmId = ?";
-        //String sql = "SELECT * FROM films WHERE filmId=?";
 
         SqlRowSet srs = jdbcTemplate.queryForRowSet(sql, filmId);
         if (srs.next()) {
@@ -116,13 +112,6 @@ public class FilmStorageDBImpl implements FilmStorageDB {
         String sql = "INSERT INTO likes (filmId, userId) "
                 + "VALUES (?, ?)";
         jdbcTemplate.update(sql, filmId, userId);
-
-//        Film result = getFilm(filmId);
-//        Set<Integer> set = result.getLikes();
-//        set.add(userId);
-//        result.setLikes(set);
-//        return result;
-
         return getFilm(filmId);
     }
 
@@ -130,13 +119,6 @@ public class FilmStorageDBImpl implements FilmStorageDB {
         String sql = "DELETE FROM likes " +
                     "WHERE (USERID IN (?, ?) AND filmId IN (?, ?)) ";
         jdbcTemplate.update(sql, filmId, userId, filmId, userId);
-
-//        Film result = getFilm(filmId);
-//        Set<Integer> set = result.getLikes();
-//        set.remove(userId);
-//        result.setLikes(set);
-//        return result;
-
         return getFilm(filmId);
     }
 
@@ -161,25 +143,7 @@ public class FilmStorageDBImpl implements FilmStorageDB {
                                 "ORDER BY COUNT(l.userId) DESC " +
                                 "LIMIT ?)";
         Collection<Film> result = jdbcTemplate.query(sql, this::filmRowMapper, count);
-
-        //TreeMap<Integer, Integer> result = new TreeMap<>();
-
-//        List<Film> result = new ArrayList<>();
-//        String sql = "SELECT filmId " +
-//                     "FROM films " +
-//                     "GROUP BY filmId " +
-//                     "ORDER BY COUNT(userId) DESC " +
-//                     "LIMIT ?";
-//        SqlRowSet popularFilms = jdbcTemplate.queryForRowSet(sql, count);
-//        while(popularFilms.next()) {
-//            result.add(getFilm(Integer.parseInt(popularFilms.getString("filmId"))));
-//        }
-
         return result;
-//        return findAll().stream()
-//                .sorted((o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size()))
-//                .limit(count)
-//                .collect(Collectors.toSet());
     }
 
     private int getNewFilmId() {
@@ -247,7 +211,7 @@ public class FilmStorageDBImpl implements FilmStorageDB {
         int mpaId = srs.getInt("ratingId");
 
         String mpaName = null;
-        if(srs.findColumn("ratingName") != 0)
+        if (srs.findColumn("ratingName") != 0)
             mpaName = srs.getString("ratingName");
 
         Mpa mpa = Mpa.builder()
