@@ -22,14 +22,6 @@ public class UserStorageDBImpl implements UserStorageDB {
     private static final Logger log = LoggerFactory.getLogger(UserStorageDBImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
-//    /* У меня произошел баг, из-за которого я не могу сделать данное действие через БД.
-//    *  При вызове updateUser с новым пользователем, у меня пробрасывается соответствующая ошибка с нужным кодом
-//    *  После чего ОШИБКА ОБРАБАТЫВАЛАСЬ, программа продолжала работу НЕ ПРОБРАСЫВАЯ ЕЕ и возвращала 500 (которое
-//    *  вообще не пойми с чем связана) вместо нужного 404.
-//    *  Не знаю как исправить, пытался по-разному. Пока стоит вот такая затычка.
-//    * */
-//    Set<Integer> userIds = new HashSet<>();
-
     @Override
     public User createUser(User user) {
         log.trace("Добавление нового пользователя");
@@ -37,14 +29,13 @@ public class UserStorageDBImpl implements UserStorageDB {
         String sql = "INSERT INTO users (login, userName, email, birthday) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, user.getLogin(), user.getName(), user.getEmail(), user.getBirthday());
         user.setId(getNewUserId());
-//        //Надо убрать, когда исправлю баг (1)
-//        userIds.add(user.getId());
         log.debug("Пользователь {} добавлен", user.getId());
         return user;
     }
 
     @Override
     public User updateUser(User user) {
+        log.trace("Изменение пользователя");
         String sql = "UPDATE users SET login = ?, userName = ?, email = ?, birthday = ? WHERE userId = ?";
         jdbcTemplate.update(sql, user.getLogin(), user.getName(), user.getEmail(), user.getBirthday(), user.getId());
         return user;
@@ -52,8 +43,9 @@ public class UserStorageDBImpl implements UserStorageDB {
 
     @Override
     public List<User> getAllUsers() {
-        String sqlQuery = "SELECT * FROM users";
-        SqlRowSet srs = jdbcTemplate.queryForRowSet(sqlQuery);
+        log.trace("Получение всех пользователей");
+        String sql = "SELECT * FROM users";
+        SqlRowSet srs = jdbcTemplate.queryForRowSet(sql);
         List<User> users = new ArrayList<>();
         while (srs.next()) {
             users.add(userMap(srs));
@@ -154,23 +146,6 @@ public class UserStorageDBImpl implements UserStorageDB {
         List<Integer> id = jdbcTemplate.query(sqlGetId, (rs, rowNum) -> rs.getInt("userId"));
         return id.get(0);
     }
-
-//    private User makeUser(ResultSet userRows) throws SQLException {
-//        User user = User.builder()
-//                .id(userRows.getInt("userId"))
-//                .login(userRows.getString("login"))
-//                .email(userRows.getString("email"))
-//                .birthday(userRows.getObject("birthday", LocalDate.class))
-//                .build();
-//
-//        if (userRows.getString("userName").isBlank()) {
-//            user.setName(user.getLogin());
-//        } else {
-//            user.setName(userRows.getString("userName"));
-//        }
-//        //TODO: возможно, нужно будет доделать
-//        return user;
-//    }
 
     private static User userMap(SqlRowSet srs) {
         Integer id = srs.getInt("userId");

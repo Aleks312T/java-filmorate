@@ -4,12 +4,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.dao.impl.FilmStorageDBImpl;
+import ru.yandex.practicum.filmorate.dao.impl.UserStorageDBImpl;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmDBService;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
@@ -46,7 +50,9 @@ class FilmControllerTest {
         customFilmService.userStorage.create(user1);
         customFilmService.userStorage.create(user2);
         customFilmService.userStorage.create(user3);
-        filmController = new FilmController(customFilmService);
+        filmController = new FilmController(new FilmDBService(
+                                                new FilmStorageDBImpl(new JdbcTemplate()),
+                                                new UserStorageDBImpl(new JdbcTemplate())));
     }
 
     @Test

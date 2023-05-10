@@ -68,11 +68,11 @@ public class UserDBService {
             log.warn(errorMessage);
             throw new ValidationException(errorMessage);
         } else
-        if (userStorageDB.getUser(user.getId()) != null) {
-            String errorMessage = "Такой пользователь уже есть.";
+        if (userStorageDB.getUser(user.getId()) == null) {
+            String errorMessage = "Пользователя с Id " + user.getId() + " нет.";
             log.warn(errorMessage);
-            throw new ObjectAlreadyExistException(errorMessage);
-        }
+            throw new ObjectDoesntExistException(errorMessage);
+        } else
 //        // Костыль от бага (1)
 //        if(userStorageDB.getUserOrNull(user.getId()) == null) {
 //            String errorMessage = "Пользователя с Id " + user.getId() + " нет.";
