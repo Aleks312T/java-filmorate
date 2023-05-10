@@ -14,7 +14,6 @@ import java.util.List;
 public class MpaService {
     private static final Logger log = LoggerFactory.getLogger(MpaService.class);
 
-    //TODO: в конце поменять обратно
     private final MpaStorageDBImpl mpaStorage;
 
 

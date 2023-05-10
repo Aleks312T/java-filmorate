@@ -1,4 +1,3 @@
---TODO: убрать перед сдачей проекта (наверное)
 --Дропаем именно в этом порядке из-за зависимостей
 DROP TABLE IF EXISTS friendshipStatus;
 DROP TABLE IF EXISTS friends;
