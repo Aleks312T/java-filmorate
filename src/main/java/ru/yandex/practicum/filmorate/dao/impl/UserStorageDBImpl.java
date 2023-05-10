@@ -35,7 +35,7 @@ public class UserStorageDBImpl implements UserStorageDB {
         log.trace("Изменение пользователя");
         String sql = "UPDATE users SET login = ?, userName = ?, email = ?, birthday = ? WHERE userId = ?";
         jdbcTemplate.update(sql, user.getLogin(), user.getName(), user.getEmail(), user.getBirthday(), user.getId());
-        return user;
+        return getUser(user.getId());
     }
 
     @Override
@@ -68,11 +68,24 @@ public class UserStorageDBImpl implements UserStorageDB {
         User friend = getUser(friendId);
         List<User> userFriends = getFriends(userId);
         if (userFriends == null || !userFriends.contains(friend)) {
-            String sql = "INSERT INTO friends (userId, friendId, friendshipStatusId) "
-                    + "VALUES(?, ?, ?)";
-            //TODO: добавить запись о подтвержденных друзьях
-            jdbcTemplate.update(sql, userId, friendId, 2);
-            return getUser(userId);
+            String sqlCheckPair = "SELECT FRIENDSHIPSTATUSID = ? " +
+                                  "FROM friends " +
+                                  "WHERE userId = ?" +
+                                  "AND friendId = ?";
+            //Проверяем есть ли они в друзьях в другую сторону
+            SqlRowSet checkPairResult = jdbcTemplate.queryForRowSet(sqlCheckPair, 1, friendId, userId);
+            if (checkPairResult.next()) {
+                String sql = "INSERT INTO friends (userId, friendId, friendshipStatusId) "
+                        + "VALUES(?, ?, ?)";
+                jdbcTemplate.update(sql, userId, friendId, 1);
+                jdbcTemplate.update(sql, friendId, userId, 1);
+                return getUser(userId);
+            } else {
+                String sql = "INSERT INTO friends (userId, friendId, friendshipStatusId) "
+                        + "VALUES(?, ?, ?)";
+                jdbcTemplate.update(sql, userId, friendId, 2);
+                return getUser(userId);
+            }
         } else {
             throw new InputMismatchException("Пользователь с id:" + friendId
                     + "уже добавлен в список друзей пользователя с id:" + userId);

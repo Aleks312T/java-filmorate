@@ -3,6 +3,7 @@
 DROP TABLE IF EXISTS friendshipStatus;
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS likes;
+DROP TABLE IF EXISTS filmGenres;
 DROP TABLE IF EXISTS films;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS rating;
@@ -24,8 +25,13 @@ CREATE TABLE IF NOT EXISTS films (
   description VARCHAR(255) NOT NULL,
   releaseDate TIMESTAMP,
   duration INT NOT NULL,
-  genreId INT REFERENCES genre(genreId) ON DELETE CASCADE,
   ratingId VARCHAR(255) NOT NULL REFERENCES rating(ratingId) ON DELETE CASCADE
+);
+
+--Создаем после films и genre
+CREATE TABLE IF NOT EXISTS filmGenres (
+  filmId INT NOT NULL REFERENCES films (filmId),
+  genreId INT NOT NULL REFERENCES genre (genreId)
 );
 
 CREATE TABLE IF NOT EXISTS users (

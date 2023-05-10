@@ -23,9 +23,6 @@ public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     @NonNull
     private final FilmDBService filmService;
-//    private final FilmDBService filmService = new FilmDBService(
-//            new FilmStorageDBImpl(new JdbcTemplate()),
-//            new UserStorageDBImpl(new JdbcTemplate()));
 
     @GetMapping
     public Collection<Film> findAll() {
