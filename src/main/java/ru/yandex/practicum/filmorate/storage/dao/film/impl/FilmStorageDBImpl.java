@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.storage.dao.film.interf.FilmStorageDB;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.storage.dao.film.interf.FilmStorageDB;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @RequiredArgsConstructor
-@Component
+@Repository
 public class FilmStorageDBImpl implements FilmStorageDB {
 
     private static final Logger log = LoggerFactory.getLogger(FilmStorageDBImpl.class);

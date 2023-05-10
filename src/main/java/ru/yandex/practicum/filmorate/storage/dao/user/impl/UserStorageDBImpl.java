@@ -5,16 +5,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.storage.dao.user.interf.UserStorageDB;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.dao.user.interf.UserStorageDB;
 
 import java.time.LocalDate;
 import java.util.*;
 
 @RequiredArgsConstructor
-@Component
+@Repository
 public class UserStorageDBImpl implements UserStorageDB {
     private static final Logger log = LoggerFactory.getLogger(UserStorageDBImpl.class);
     private final JdbcTemplate jdbcTemplate;

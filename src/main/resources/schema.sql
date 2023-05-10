@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS films (
   description VARCHAR(255) NOT NULL,
   releaseDate TIMESTAMP,
   duration INT NOT NULL,
-  ratingId VARCHAR(255) NOT NULL REFERENCES rating (ratingId) ON DELETE CASCADE
+  ratingId INT NOT NULL REFERENCES rating (ratingId) ON DELETE CASCADE
 );
 
 --Создаем после films и genre
