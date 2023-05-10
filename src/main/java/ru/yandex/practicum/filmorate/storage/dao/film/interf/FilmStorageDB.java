@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dao.interf;
+package ru.yandex.practicum.filmorate.storage.dao.film.interf;
 
 import ru.yandex.practicum.filmorate.model.Film;
 

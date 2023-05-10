@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dao.impl.MpaStorageDBImpl;
+import ru.yandex.practicum.filmorate.storage.dao.film.impl.MpaStorageDBImpl;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.List;

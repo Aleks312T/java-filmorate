@@ -19,7 +19,6 @@ import java.util.Collection;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @NonNull
-    //private final UserService userService;
     private final UserDBService userService;
 
     @GetMapping
