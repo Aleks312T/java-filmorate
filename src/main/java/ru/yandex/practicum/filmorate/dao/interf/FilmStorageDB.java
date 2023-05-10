@@ -22,7 +22,4 @@ public interface FilmStorageDB {
 
     public Collection<Integer> returnLikes(Integer filmId);
 
-//    private int getNewFilmId();
-//    private void connectFilmGenre(Film film);
-//    private static Film filmMap(SqlRowSet srs);
 }

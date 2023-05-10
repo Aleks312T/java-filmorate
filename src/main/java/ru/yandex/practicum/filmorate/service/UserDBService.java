@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,12 @@ import java.util.InputMismatchException;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class UserDBService {
     private static final Logger log = LoggerFactory.getLogger(UserDBService.class);
     //TODO: в конце поменять обратно
     //private final UserStorageDB userStorageDB;
     private final UserStorageDBImpl userStorageDB;
-
-    @Autowired
-    //public UserDBService(UserStorageDB userStorage) {
-    public UserDBService(UserStorageDBImpl userStorage) {
-        this.userStorageDB = userStorage;
-    }
 
     public User create(User user) {
         if (user == null) {
