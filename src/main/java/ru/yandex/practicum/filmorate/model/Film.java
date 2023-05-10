@@ -7,7 +7,6 @@ import lombok.NonNull;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -35,7 +34,7 @@ public class Film {
     private Mpa mpa;
 
     @Getter
-    Set<Integer> likes = new HashSet<>();
+    Set<Integer> likes;
     protected Integer id;
 
 }

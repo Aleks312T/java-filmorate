@@ -4,11 +4,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.dao.impl.FilmStorageDBImpl;
-import ru.yandex.practicum.filmorate.dao.impl.UserStorageDBImpl;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmDBService;
 
@@ -60,13 +57,6 @@ public class FilmController {
     public Film deleteLike(@PathVariable("id") int filmId, @PathVariable("userId") int userId) {
         log.info("Получен запрос DeleteMapping /{}/like/{}.", filmId, userId);
         return filmService.removeLike(filmId, userId);
-    }
-
-    //По аналогии с возвращением списка друзей
-    @GetMapping("/{id}/likes")
-    public Collection<Integer> getLikes(@PathVariable("id") int filmId) {
-        log.info("Получен запрос Get /{}/likes.", filmId);
-        return filmService.returnLikes(filmId);
     }
 
     @GetMapping("/popular")

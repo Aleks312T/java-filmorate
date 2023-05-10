@@ -20,6 +20,6 @@ public interface FilmStorageDB {
 
     public Collection<Film> getPopularFilm(Integer count);
 
-    public Collection<Integer> returnLikes(Integer filmId);
+    //public Collection<Integer> returnLikes(Integer filmId);
 
 }

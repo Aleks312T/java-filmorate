@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.filmorate.dao.impl.FilmStorageDBImpl;
 import ru.yandex.practicum.filmorate.dao.impl.UserStorageDBImpl;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
@@ -16,6 +17,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.InputMismatchException;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,21 +103,43 @@ public class FilmDBService {
     }
 
     public Film addLike(int filmId, int userId) {
-        return null;
+        if (filmStorageDB.getFilm(filmId) == null) {
+            String errorMessage = "Фильма с Id " + filmId + " не существует.";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else
+        if (userStorageDB.getUser(userId) == null) {
+            String errorMessage = "Пользователя с Id " + userId + " не существует.";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else
+            filmStorageDB.removeLike(filmId, userId);
+            return filmStorageDB.addLike(filmId, userId);
     }
 
     public Film removeLike(int filmId, int userId) {
-        return null;
+        if (filmStorageDB.getFilm(filmId) == null) {
+            String errorMessage = "Фильма с Id " + filmId + " не существует.";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else
+        if (userStorageDB.getUser(userId) == null) {
+            String errorMessage = "Пользователя с Id " + userId + " не существует.";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else
+            return filmStorageDB.removeLike(filmId, userId);
     }
 
     public Collection<Film> getPopularFilm(int count) {
-        return null;
+        if (count < 0) {
+            String errorMessage = "Количество фильмов не может быть меньше 0.";
+            log.warn(errorMessage);
+            throw new InputMismatchException(errorMessage);
+        }
+        return filmStorageDB.getPopularFilm(count);
     }
 
-    public Collection<Integer> returnLikes(int filmId) {
-
-        return null;
-    }
 
     private boolean validateFilm(@Valid Film film) {
         return (!film.getName().isBlank())

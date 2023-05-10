@@ -98,6 +98,7 @@ public class FilmStorageDBImpl implements FilmStorageDB {
                 "JOIN rating AS r ON f.ratingId = r.ratingId " +
                 "LEFT JOIN filmGenres AS fg ON fg.filmId = f.filmId " +
                 "LEFT JOIN genre AS g ON g.genreId = fg.genreId " +
+                "LEFT JOIN likes AS l ON l.filmId = f.filmId " +
                 "WHERE f.filmId = ?";
         //String sql = "SELECT * FROM films WHERE filmId=?";
 
@@ -115,25 +116,70 @@ public class FilmStorageDBImpl implements FilmStorageDB {
         String sql = "INSERT INTO likes (filmId, userId) "
                 + "VALUES (?, ?)";
         jdbcTemplate.update(sql, filmId, userId);
+
+//        Film result = getFilm(filmId);
+//        Set<Integer> set = result.getLikes();
+//        set.add(userId);
+//        result.setLikes(set);
+//        return result;
+
         return getFilm(filmId);
     }
 
     public Film removeLike(Integer filmId, Integer userId) {
-        String sql = "DELETE FROM likes "
-                + "WHERE filmId = ? AND userId = ?";
-        jdbcTemplate.update(sql, filmId, userId);
+        String sql = "DELETE FROM likes " +
+                    "WHERE (USERID IN (?, ?) AND filmId IN (?, ?)) ";
+        jdbcTemplate.update(sql, filmId, userId, filmId, userId);
+
+//        Film result = getFilm(filmId);
+//        Set<Integer> set = result.getLikes();
+//        set.remove(userId);
+//        result.setLikes(set);
+//        return result;
+
         return getFilm(filmId);
     }
 
-    //TODO: сделать
-    public Collection<Film> getPopularFilm(Integer count) {
-        return null;
+    public boolean getLike(Integer filmId, Integer userId) {
+        String sql = "DELETE FROM likes "
+                + "WHERE filmId = ? AND userId = ?";
+        jdbcTemplate.update(sql, filmId, userId);
+        return true;
     }
 
-    //TODO: сделать
-    public Collection<Integer> returnLikes(Integer filmId) {
+    public Collection<Film> getPopularFilm(Integer count) {
+        String sql = "SELECT * " +
+                "FROM films f " +
+                "JOIN rating AS r ON f.ratingId = r.ratingId " +
+                "LEFT JOIN filmGenres AS fg ON fg.filmId = f.filmId " +
+                "LEFT JOIN genre AS g ON g.genreId = fg.genreId " +
+                "LEFT JOIN likes AS l ON l.filmId = f.filmId " +
+                "WHERE f.filmId IN (SELECT f1.filmId " +
+                                "FROM FILMS f1 " +
+                                "LEFT JOIN likes l ON f1.filmID = l.filmID " +
+                                "GROUP BY f1.filmId " +
+                                "ORDER BY COUNT(l.userId) DESC " +
+                                "LIMIT ?)";
+        Collection<Film> result = jdbcTemplate.query(sql, this::filmRowMapper, count);
 
-        return null;
+        //TreeMap<Integer, Integer> result = new TreeMap<>();
+
+//        List<Film> result = new ArrayList<>();
+//        String sql = "SELECT filmId " +
+//                     "FROM films " +
+//                     "GROUP BY filmId " +
+//                     "ORDER BY COUNT(userId) DESC " +
+//                     "LIMIT ?";
+//        SqlRowSet popularFilms = jdbcTemplate.queryForRowSet(sql, count);
+//        while(popularFilms.next()) {
+//            result.add(getFilm(Integer.parseInt(popularFilms.getString("filmId"))));
+//        }
+
+        return result;
+//        return findAll().stream()
+//                .sorted((o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size()))
+//                .limit(count)
+//                .collect(Collectors.toSet());
     }
 
     private int getNewFilmId() {
@@ -175,7 +221,6 @@ public class FilmStorageDBImpl implements FilmStorageDB {
     private Set<Genre> getGenres(int filmId) {
         Comparator<Genre> compId = Comparator.comparing(Genre::getId);
         Set<Genre> genres = new TreeSet<>(compId);
-        //TODO: поменять запрос
         String sql = "SELECT filmGenres.genreId, genre.genreName FROM filmGenres "
                 + "JOIN genre ON genre.genreId = filmGenres.genreId "
                 + "WHERE filmId = ? ORDER BY genreId ASC";
@@ -221,5 +266,24 @@ public class FilmStorageDBImpl implements FilmStorageDB {
                 .genres(genres)
                 .releaseDate(releaseDate)
                 .build();
+    }
+
+    private Film filmRowMapper(ResultSet rs, int rowNum) throws SQLException {
+        Film film = Film.builder()
+                .id(rs.getInt("filmId"))
+                .name(rs.getString("filmName"))
+                .description(rs.getString("description"))
+                .releaseDate(rs.getDate("releaseDate").toLocalDate())
+                .duration(rs.getInt("duration"))
+                .mpa(new Mpa(rs.getInt("ratingId"), rs.getString("ratingName")))
+                .build();
+
+        if (film.getGenres() != null) {
+            disconnectFilmGenre(film.getId());
+            connectFilmGenre(film);
+        } else {
+            film.setGenres(new HashSet<>());
+        }
+        return film;
     }
 }

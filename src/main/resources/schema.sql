@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS films (
   description VARCHAR(255) NOT NULL,
   releaseDate TIMESTAMP,
   duration INT NOT NULL,
-  ratingId VARCHAR(255) NOT NULL REFERENCES rating(ratingId) ON DELETE CASCADE
+  ratingId VARCHAR(255) NOT NULL REFERENCES rating (ratingId) ON DELETE CASCADE
 );
 
 --Создаем после films и genre
@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS friends (
-  userId INT NOT NULL REFERENCES users(userId),
-  friendId INT NOT NULL REFERENCES users(userId),
+  userId INT NOT NULL REFERENCES users (userId),
+  friendId INT NOT NULL REFERENCES users (userId),
   friendshipStatusId INT NOT NULL
 );
 
@@ -54,8 +54,9 @@ CREATE TABLE IF NOT EXISTS friendshipStatus (
 );
 
 CREATE TABLE IF NOT EXISTS likes (
-  filmId INT NOT NULL REFERENCES films(filmId),
+  filmId INT NOT NULL REFERENCES films (filmId),
   userId INT NOT NULL REFERENCES users (userId)
+    --CONSTRAINT LIKES_PK PRIMARY KEY (filmId,userId),
 );
 
 COMMENT ON COLUMN genre.genreName IS 'Жанр фильма';
