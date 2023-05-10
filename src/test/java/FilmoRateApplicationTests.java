@@ -22,34 +22,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class FilmoRateApplicationTests {
-	private UserController userController = new UserController(new UserDBService(
-			new UserStorageDBImpl(new JdbcTemplate())));
-	private FilmController filmController = new FilmController(new FilmDBService(
-			new FilmStorageDBImpl(new JdbcTemplate()), new UserStorageDBImpl(new JdbcTemplate())));
+    private UserController userController = new UserController(new UserDBService(
+            new UserStorageDBImpl(new JdbcTemplate())));
+    private FilmController filmController = new FilmController(new FilmDBService(
+            new FilmStorageDBImpl(new JdbcTemplate()), new UserStorageDBImpl(new JdbcTemplate())));
 
-	@Test
-	public void testFindUserById() {
-		User user = User.builder()
-				.login("login")
-				.email("qwerty@mail.ru")
-				.birthday(LocalDate.of(2001, 1, 1))
-				.id(1)
-				.build();
-		User result = userController.create(user);
-		assertEquals(user, result);
-		assertEquals("login", result.getName());
-	}
+    @Test
+    public void testFindUserById() {
+        User user = User.builder()
+                .login("login")
+                .email("qwerty@mail.ru")
+                .birthday(LocalDate.of(2001, 1, 1))
+                .id(1)
+                .build();
+        User result = userController.create(user);
+        assertEquals(user, result);
+        assertEquals("login", result.getName());
+    }
 
-	@Test
-	public void testFindFilmById() {
-		Film film = Film.builder()
-				.name("qwerty")
-				.description("Description")
-				.releaseDate(LocalDate.of(1999, 10, 10))
-				.duration(120)
-				.id(1)
-				.mpa(new Mpa(1, "G"))
-				.build();
-		assertEquals(film, filmController.create(film));
-	}
+    @Test
+    public void testFindFilmById() {
+        Film film = Film.builder()
+                .name("qwerty")
+                .description("Description")
+                .releaseDate(LocalDate.of(1999, 10, 10))
+                .duration(120)
+                .id(1)
+                .mpa(new Mpa(1, "G"))
+                .build();
+        assertEquals(film, filmController.create(film));
+    }
 }
