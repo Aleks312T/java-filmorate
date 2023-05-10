@@ -15,17 +15,15 @@ import ru.yandex.practicum.filmorate.service.FilmDBService;
 import ru.yandex.practicum.filmorate.service.UserDBService;
 import ru.yandex.practicum.filmorate.storage.dao.film.impl.FilmStorageDBImpl;
 import ru.yandex.practicum.filmorate.storage.dao.user.impl.UserStorageDBImpl;
-
 import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class FilmoRateApplicationTests {
-	private UserController userController = new UserController(new UserDBService
-				(new UserStorageDBImpl(new JdbcTemplate())));
+	private UserController userController = new UserController(new UserDBService(
+			new UserStorageDBImpl(new JdbcTemplate())));
 	private FilmController filmController = new FilmController(new FilmDBService(
 			new FilmStorageDBImpl(new JdbcTemplate()), new UserStorageDBImpl(new JdbcTemplate())));
 
