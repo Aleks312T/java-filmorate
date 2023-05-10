@@ -34,11 +34,11 @@ public class UserDBService {
             log.warn(errorMessage);
             throw new NullPointerException(errorMessage);
         } else
-//        if (userStorageDB.getUser(user.getId()) != null) {
-//            String errorMessage = "Такой пользователь уже есть.";
-//            log.warn(errorMessage);
-//            throw new ObjectAlreadyExistException(errorMessage);
-//        }
+        if (user.getId() != null && userStorageDB.getUser(user.getId()) != null) {
+            String errorMessage = "Такой пользователь уже есть.";
+            log.warn(errorMessage);
+            throw new ObjectAlreadyExistException(errorMessage);
+        }
         if(validateUser(user))
             return userStorageDB.createUser(user);
         else {
@@ -73,12 +73,6 @@ public class UserDBService {
             log.warn(errorMessage);
             throw new ObjectDoesntExistException(errorMessage);
         } else
-//        // Костыль от бага (1)
-//        if(userStorageDB.getUserOrNull(user.getId()) == null) {
-//            String errorMessage = "Пользователя с Id " + user.getId() + " нет.";
-//            log.warn(errorMessage);
-//            throw new ObjectDoesntExistException(errorMessage);
-//        } else
             return userStorageDB.updateUser(user);
     }
 

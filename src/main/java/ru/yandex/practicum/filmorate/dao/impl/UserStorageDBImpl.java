@@ -10,11 +10,8 @@ import ru.yandex.practicum.filmorate.dao.interf.UserStorageDB;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -66,15 +63,6 @@ public class UserStorageDBImpl implements UserStorageDB {
             throw new ObjectDoesntExistException(errorMessage);
         }
     }
-
-//    // Метод под баг (1)
-//    public User getUserOrNull(int id) {
-//        log.trace("Получение пользователя (костыльное) ");
-//        if(userIds.contains(id))
-//            return User.builder().id(id).build();
-//        else
-//            return null;
-//    }
 
     public User addFriend(Integer userId, Integer friendId) {
         User friend = getUser(friendId);

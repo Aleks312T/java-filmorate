@@ -65,7 +65,17 @@ public class FilmStorageDBImpl implements FilmStorageDB {
 
     public Film updateFilm(Film film) {
         log.trace("Изменение фильма");
-        return null;
+        String sql = "UPDATE films " +
+                     "SET filmName = ?, description = ?, releaseDate = ?, duration = ?, ratingId  = ? " +
+                     "WHERE filmId = ?";
+        jdbcTemplate.update(sql,
+                film.getName(),
+                film.getDescription(),
+                film.getReleaseDate(),
+                film.getDuration(),
+                film.getMpa().getId(),
+                film.getId());
+        return film;
     }
 
     public Film getFilm(Integer filmId) {

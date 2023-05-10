@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.impl.FilmStorageDBImpl;
 import ru.yandex.practicum.filmorate.dao.impl.UserStorageDBImpl;
+import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.ObjectDoesntExistException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -41,6 +42,11 @@ public class FilmDBService {
             log.warn(errorMessage);
             throw new NullPointerException(errorMessage);
         } else
+        if (film.getId() != null && filmStorageDB.getFilm(film.getId()) != null) {
+            String errorMessage = "Такой фильм уже есть.";
+            log.warn(errorMessage);
+            throw new ObjectAlreadyExistException(errorMessage);
+        }
         if(validateFilm(film))
             return filmStorageDB.createFilm(film);
         else {
@@ -51,7 +57,28 @@ public class FilmDBService {
     }
 
     public Film put(Film film) {
-        return filmStorageDB.updateFilm(film);
+        if (film == null) {
+            String errorMessage = "Отсутствуют входные данные.";
+            log.warn(errorMessage);
+            throw new NullPointerException(errorMessage);
+        } else
+        if(film.getId() == null) {
+            String errorMessage = "Отсутствует входной идентификатор.";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else
+        if (filmStorageDB.getFilm(film.getId()) == null) {
+            String errorMessage = "Фильма с Id " + film.getId() + " нет.";
+            log.warn(errorMessage);
+            throw new ObjectDoesntExistException(errorMessage);
+        } else
+        if(!validateFilm(film)) {
+            String errorMessage = "Фильм не прошел валидацию.";
+            log.warn(errorMessage);
+            throw new ValidationException(errorMessage);
+        } else {
+            return filmStorageDB.updateFilm(film);
+        }
     }
 
     public Film getFilm(Integer filmId) {
