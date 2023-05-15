@@ -1,8 +1,7 @@
 package ru.yandex.practicum.filmorate.exception;
 
-import java.util.InputMismatchException;
-
-public class ObjectDoesntExistException extends InputMismatchException {
+//public class ObjectDoesntExistException extends InputMismatchException {
+public class ObjectDoesntExistException extends RuntimeException {
     public ObjectDoesntExistException() {
         super();
     }
